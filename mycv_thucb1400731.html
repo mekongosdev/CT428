@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lê Nguyên Thức - Lý lịch cá nhân</title>
+
+    <!-- Phong cach thiet ke -->
+    <style media="screen">
+      body {
+        width: 100%;
+      }
+      img {
+        width: 180px;
+        height: 225px;
+        border-radius: 10px;
+        margin: 50px 50px 20px 50px;
+      }
+      table {
+        font-size: 1.5em
+      }
+      .banner {
+        margin-top: -20px;
+        width: 99%;
+        display: inline-block;
+        background-color: chartreuse;
+        color: white
+      }
+      .banner h1 {
+        margin-left: 10px;
+      }
+      .wrapper {
+        width: 100%;
+      }
+      .content {
+        width: 75%;
+        height: auto;
+        margin: 50px auto;
+      }
+      .info {
+        width: 100%;
+        height: 300px;
+        margin: auto;
+      }
+      .my-face {
+        width: 30%;
+        float: left;
+      }
+      .my-info {
+        width: 70%;
+        float: left;
+      }
+      .my-info-content {
+        font-size: 1.5em
+      }
+      .my-info-content a {
+        text-decoration: none;
+      }
+      @media only screen and (max-width: 1100px) {
+        img {
+          width: 300px;
+          height: auto;
+          border-radius: 10px;
+          margin: 50px 25% 20px 25%;
+        }
+        .my-face {
+          width: 100%;
+          float: left;
+        }
+        .my-info {
+          width: 100%;
+          float: left;
+        }
+      }
+      @media only screen and (max-width: 768px) {
+        table {
+          font-size: 1em
+        }
+        img {
+          width: 50%;
+          height: auto;
+          border-radius: 10px;
+          margin: 50px 25% 20px 25%;
+        }
+        .my-face {
+          width: 100%;
+          float: left;
+        }
+        .my-info {
+          width: 100%;
+          float: left;
+        }
+        .my-info-content {
+          font-size: 1em
+        }
+        .my-favorite ul {
+          font-size: 0.5em
+        }
+      }
+      .my-learn-processing {
+        width: 100%;
+        height: auto;
+        float: left;
+      }
+      .learn-info {
+        border-left-color: blue;
+        border-left-style: solid;
+      }
+      .my-experience {
+        width: 100%;
+        height: auto;
+        float: left;
+      }
+      .experience-info {
+        border-left-color: lime;
+        border-left-style: solid;
+      }
+      .my-award {
+        width: 100%;
+        height: auto;
+        float: left;
+      }
+      .award-info {
+        border-left-color: red;
+        border-left-style: solid;
+      }
+      .my-favorite {
+        width: 100%;
+        height: auto;
+        float: left;
+      }
+      .my-favorite ul {
+        font-size: 1.5em
+      }
+      .footer {
+        width: 100%;
+        float: left;
+      }
+      .border-clearfix {
+        border-bottom-style: solid;
+      }
+    </style>
+
+    <!-- Dong ho thoi gian -->
+    <script type="text/javascript">
+      function time() {
+         var today = new Date();
+         var weekday=new Array(7);
+         weekday[0]="Chủ nhật";
+         weekday[1]="Thứ hai";
+         weekday[2]="Thứ ba";
+         weekday[3]="Thứ tư";
+         weekday[4]="Thứ năm";
+         weekday[5]="Thứ sáu";
+         weekday[6]="Thứ bảy";
+         var day = weekday[today.getDay()];
+         var dd = today.getDate();
+         var mm = today.getMonth()+1; //January is 0!
+         var yyyy = today.getFullYear();
+         var h=today.getHours();
+         var m=today.getMinutes();
+         var s=today.getSeconds();
+         m=checkTime(m);
+         s=checkTime(s);
+         nowTime = h+":"+m+":"+s;
+         if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = day+', '+ dd+'/'+mm+'/'+yyyy;
+
+         innerToday=today;
+         innerNowTime=nowTime;
+
+         document.getElementById("toDay").innerHTML=innerToday;
+         document.getElementById("nowTime").innerHTML=innerNowTime;
+
+         clocktime=setTimeout("time()","1000","JavaScript");
+         function checkTime(i)
+         {
+            if(i<10){
+           i="0" + i;
+            }
+            return i;
+         }
+      }
+      </script>
+
+    <!-- Bootstrap -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body onload="time()">
+    <!-- Bat dau phan noi dung trang web  -->
+    <div class="banner">
+      <h1>Lý lịch cá nhân</h1>
+    </div>
+    <div class="wrapper">
+      <div class="content">
+        <div class="info">
+          <hr>
+          <div class="my-face">
+            <img src="myface_thucb1400731.jpg" alt="Ảnh của Lê Nguyên Thức">
+          </div>
+          <div class="my-info">
+            <h1>LÊ NGUYÊN THỨC</h1>
+            <hr>
+            <div class="my-info-content">
+              <span>Phái: <strong><i>Nam</i></strong></span><br>
+              <span>Năm sinh: <strong><i>26-06-1996</i></strong></span><br>
+              <span>Email công việc: <strong><i>thucb1400731[at]student.ctu.edu.vn</i></strong></span><br>
+              <span>Email cá nhân: <strong><i>me[at]ngthuc.com</i></strong></span><br>
+              <span>Điện thoại: <strong><i>+84 (0) 1678 911 202</i></strong></span><br>
+              <span>Website: <strong><a href="https://ngthuc.com" target="_blank"><i>https://ngthuc.com</i></a></strong></span><br>
+              <span>Địa chỉ: <strong><i>đường 3/2, phường Hưng Lợi, quận Ninh Kiều, TP.Cần Thơ</i></strong></span><br>
+            </div>
+          </div>
+        </div>
+        <div class="my-learn-processing">
+          <hr>
+          <h1>Quá trình học tập</h1>
+          <table>
+            <tbody>
+              <tr>
+                <td class="border-clearfix">6/2014</td>
+                <td class="learn-info border-clearfix">
+                  <strong>THPT Lấp Vò 3</strong><br>
+                  <i>- Niên khóa 2011 - 2014</i>
+                </td>
+              </tr>
+              <tr>
+                <td>12/2018</td>
+                <td class="learn-info">
+                  <strong>Đại học Cần Thơ </strong><br>
+                  <i>- Kỹ thuật phần mềm (2014 - 2018)</i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="my-experience">
+          <hr>
+          <h1>Kinh nghiệm làm việc</h1>
+          <table>
+            <tbody>
+              <tr>
+                <td class="border-clearfix">2015 - nay</td>
+                <td class="experience-info border-clearfix">
+                  <strong>Ngôn ngữ C/C++</strong><br>
+                  <i>- Lập trình nhúng với Arduino: Xe điều khiển từ xa qua Bluetooth,...</i>
+                </td>
+              </tr>
+              <tr>
+                <td class="border-clearfix">2016 - nay</td>
+                <td class="experience-info border-clearfix">
+                  <strong>Ngôn ngữ PHP và các công cụ</strong><br>
+                  <i>- Phân tích yêu cầu phần mềm: "Hệ thống quản lý thiết bị nhúng"</i><br>
+                  <i>- Nghiên cứu khoa học sinh viên: "Hệ thống quản lý điểm danh bằng thẻ" (TSV2017-12)</i><br>
+                  <i>- Dự án web Wordpress: "Trung tâm dạy đàn Thanh Tuấn" (Hậu Giang)</i><br>
+                  <i>- Dự án web Wordpress: "Trang thông tin công ty Tường Minh Anh" (TP.HCM)</i><br>
+                  <i>- Dự án web Wordpress: "Trang thông tin Viện Quy hoạch Xây dựng" (Sở Xây dựng TP.Cần Thơ)</i><br>
+                </td>
+              </tr>
+              <tr>
+                <td class="border-clearfix">2017 - nay</td>
+                <td class="experience-info border-clearfix">
+                  <strong>Ngôn ngữ Java và C#</strong><br>
+                  <i>- Đồ án môn học: "Phần mềm Mail Client" (JAVA)</i><br>
+                  <i>- Đồ án môn học: "Phần mềm quản lý thư viện" (C#)</i>
+                </td>
+              </tr>
+              <tr>
+                <td class="border-clearfix">2014 - nay</td>
+                <td class="experience-info border-clearfix">
+                  <strong>Công tác quản lý và tổ chức - cấp Chi đoàn</strong><br>
+                  <i>- Phó Bí thư Chi đoàn nhiệm kỳ 2014 - 2018</i>
+                </td>
+              </tr>
+              <tr>
+                <td class="border-clearfix">2016 - nay</td>
+                <td class="experience-info border-clearfix">
+                  <strong>Công tác quản lý và tổ chức - cấp Đoàn khoa</strong><br>
+                  <i>- Ủy viên Ban chấp hành Đoàn khoa CNTT&TT nhiệm kỳ 2016 - 2019</i><br>
+                  <i>- Phó Chủ nhiệm CLB Tin học từ 9/2016 đến nay</i><br>
+                  <i>- Ủy viên Ban thường vụ Đoàn khoa CNTT&TT nhiệm kỳ 2016 - 2019</i>
+                </td>
+              </tr>
+              <tr>
+                <td>2016 - nay</td>
+                <td class="experience-info">
+                  <strong>Công tác quản lý và tổ chức - cấp Đoàn trường</strong><br>
+                  <i>- Trưởng nhóm CTV Công nghệ thông tin Đoàn trường năm 2016</i><br>
+                  <i>- Chủ nhiệm CLB Dynamic Đoàn trường từ 4/2017 đến nay</i><br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="my-award">
+          <hr>
+          <h1>Thành tích - Giải thưởng</h1>
+          <table>
+            <tbody>
+              <tr>
+                <td class="border-clearfix">Năm 2015</td>
+                <td class="award-info border-clearfix">
+                  <strong>* Giấy khen Đoàn khoa CNTT&TT</strong><br>
+                  <i>Thành tích công tác Đoàn và phong trào thanh niên năm 2014 - 2015</i><br>
+                  <strong>* Giấy khen Sở Lao động, Thương binh và Xã hội TP.Cần Thơ</strong><br>
+                  <i>Đạt giải Khuyến khích nghề Thiết kế Web, Hội thi Tay nghề giỏi cấp Thành phố năm 2015</i>
+                </td>
+              </tr>
+              <tr>
+                <td class="border-clearfix">Năm 2016</td>
+                <td class="award-info border-clearfix">
+                  <strong>* Giấy khen Đoàn khoa CNTT&TT</strong><br>
+                  <i>Thành tích công tác Đoàn và phong trào thanh niên năm 2014 - 2015</i><br>
+                  <strong>* Giấy khen Hội Sinh viên trường Đại học Cần Thơ</strong><br>
+                  <i>Thành tích công tác Hội và phong trào sinh viên năm 2015 - 2016</i>
+                </td>
+              </tr>
+              <tr>
+                <td>Năm 2017</td>
+                <td class="award-info">
+                  <strong>* Giấy khen Hiệu trưởng trường Đại học Cần Thơ</strong><br>
+                  <i>Thành tích tham gia tích cực phong trào hiến máu tình nguyện năm 2016</i><br>
+                  <strong>* Giấy khen Đoàn trường Đại học Cần Thơ</strong><br>
+                  <i>Thành tích công tác Đoàn và phong trào thanh niên năm 2016 - 2017</i><br>
+                  <strong>* Giấy khen Đoàn khoa CNTT&TT</strong><br>
+                  <i>Thành tích công tác Đoàn và phong trào thanh niên năm 2016 - 2017</i><br>
+                  <strong>* Giấy khen Đoàn trường Đại học Cần Thơ</strong><br>
+                  <i>Hoàn thành tốt nhiệm vụ Ban Chủ nhiệm CLB Dynamic trường Đại học Cần Thơ</i><br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="my-favorite">
+          <hr>
+          <h1>Sở thích</h1>
+          <ul>
+            <li>Đọc sách: tiểu thuyết, kinh doanh, khoa học kỹ thuật</li>
+            <li>Nghe nhạc: EDM, Rock, Ballad</li>
+            <li>Chơi nhạc cụ: đàn Organ</li>
+            <li>Khám phá: các ngôn ngữ mới, kỹ thuật mới, công cụ mới</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <hr>
+      <i>Hôm nay là <b id="toDay"></b> | Bây giờ là <b id="nowTime"></b></i>
+    </div>
+    <!-- Ket thuc phan noi dung trang web -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+  </body>
+</html>
