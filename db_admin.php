@@ -1,17 +1,46 @@
 <?php
-// Thiết lập sessions cho database
-session_start();
-if (!$_SESSION['database']) $_SESSION['database'] = null; // Test
-// if (!$_SESSION['database']) $_SESSION['database'] = 'ltweb'; // Ampps
-// if (!$_SESSION['database']) $_SESSION['database'] = 'db_c4'; // Ltweb
-
-// Kết nối CSDL
-$db_host = "localhost"; // Ampps
-$db_user = "root"; // Ampps
-$db_pass = "mysql"; // Ampps
+// Một số thông tin môn học CT428
 // $db_host = "172.30.35.70"; // Ltweb
 // $db_user = "user_c4"; // Ltweb
 // $db_pass = "puser_c4"; // Ltweb
+// $db_name = "db_c4"; // Ltweb
+
+// Thiết lập sessions cho database
+session_start();
+if (!$_SESSION['database']) $_SESSION['database'] = null; // Official
+
+// Connect server
+if (isset($_POST['access-db'])) {
+  // Lưu Session server
+  setcookie("db_host",$_POST['db_host'],time() + 3600);
+  setcookie("db_user",$_POST['db_user'],time() + 3600);
+  setcookie("db_pass",$_POST['db_pass'],time() + 3600);
+  echo '<meta http-equiv="refresh" content="0">';
+}
+
+// Quick connect server College of ICT
+if (isset($_POST['access-db-cit'])) {
+  // Lưu Session server
+  setcookie("db_host","172.30.35.70",time() + 3600);
+  setcookie("db_user","user_c4",time() + 3600);
+  setcookie("db_pass","puser_c4",time() + 3600);
+  $_SESSION['database'] = "db_c4";
+  echo '<meta http-equiv="refresh" content="0">';
+}
+
+// Quick connect server Ampps
+if (isset($_POST['access-db-ampps'])) {
+  // Lưu Session server
+  setcookie("db_host","localhost",time() + 3600);
+  setcookie("db_user","root",time() + 3600);
+  setcookie("db_pass","mysql",time() + 3600);
+  echo '<meta http-equiv="refresh" content="0">';
+}
+
+// Kết nối CSDL
+$db_host = $_COOKIE['db_host']; // Official
+$db_user = $_COOKIE['db_user']; // Official
+$db_pass = $_COOKIE['db_pass']; // Official
 $conn = mysql_connect($db_host,$db_user,$db_pass) or die(mysql_error());
 mysql_set_charset('utf8');
 mysql_select_db($_SESSION['database']);
@@ -19,7 +48,9 @@ mysql_select_db($_SESSION['database']);
 // Select database
 if (isset($_POST['choose-database'])) {
   // Lưu Session database
-  $_SESSION['database'] = $_POST['choose-database'];
+  if ($_POST['choose-database'] == 'information_schema' || $_POST['choose-database'] == 'mysql' || $_POST['choose-database'] == 'performance_schema') {
+    $_SESSION['database'] = null;
+  } else $_SESSION['database'] = $_POST['choose-database'];
 } // else $_SESSION['database'] = null;
 
 // Select table
@@ -65,6 +96,54 @@ if (isset($_POST['sql_qry'])) {
 
   echo '<meta http-equiv="refresh" content="0">';
 }
+
+// Upload CT428
+if(isset($_POST['upload-ct428'])) {
+    if (isset($_FILES['file_up'])) {
+      foreach($_FILES['file_up']['name'] as $name => $value)
+        {
+            $name_img = stripslashes($_FILES['file_up']['name'][$name]);
+            $source_img = $_FILES['file_up']['tmp_name'][$name];
+
+            $path_img = 'loc_thuc_' . $name_img; // Đường dẫn thư mục chứa file
+            move_uploaded_file($source_img, $path_img); // Upload file
+        }
+
+        echo '<script>alert("Success Message");</script>';
+        echo '<meta http-equiv="refresh" content="0">';
+    }
+}
+
+// Update MySQLAdmin
+if(isset($_POST['update-myadmin'])) {
+    if ($_FILES["file-update"]["error"] > 0) {
+        echo "Error: " . $_FILES["file-update"]["error"] . "<br />";
+    } else {
+        // echo "Upload: " . $_FILES["file-update"]["name"] . "<br />";
+        // echo "Type: " . $_FILES["file-update"]["type"] . "<br />";
+        // echo "Size: " . ($_FILES["file-update"]["size"] / 1024) . " Kb<br />";
+        // echo "Stored in: " . $_FILES["file-update"]["tmp_name"] . "<br />";
+        $temp = explode(".", $_FILES["file-update"]["name"]);
+        $newfilename = 'db_admin' . '.' . end($temp);
+        move_uploaded_file($_FILES["file-update"]["tmp_name"], $newfilename);
+    }
+}
+
+// Exit database
+if (isset($_POST['exit-db-btn'])) {
+  session_destroy();
+
+  echo '<meta http-equiv="refresh" content="0">';
+}
+
+// Exit server
+if (isset($_POST['exit-server-btn'])) {
+  setcookie("db_host");
+  setcookie("db_user");
+  setcookie("db_pass");
+
+  echo '<meta http-equiv="refresh" content="0">';
+}
 ?>
 
 <!DOCTYPE html>
@@ -106,269 +185,383 @@ if (isset($_POST['sql_qry'])) {
           ?></span>
         </div>
         <div id="menu-bar" style="background-color: rgb(182, 182, 182); width: 100%; height: 50%; float: left">
-          <button type="button" style="margin-left: 5px" id="show-database-box" onclick="showStuff('database-box', ['browse-box','structure-box','sql-box','export-box','import-box']); return false;">Databases</button>
-          <button type="button" id="show-infomation" onclick="showStuff('browse-box', ['database-box','structure-box','sql-box','export-box','import-box']); return false;">Browse</button>
-          <button type="button" id="show-structure" onclick="showStuff('structure-box', ['browse-box','database-box','sql-box','export-box','import-box']); return false;">Structure</button>
-          <button type="button" id="show-sql-box" onclick="showStuff('sql-box', ['browse-box','structure-box','database-box','export-box','import-box']); return false;">SQL</button>
-          <button type="button" id="show-export-box"onclick="showStuff('export-box', ['browse-box','structure-box','sql-box','database-box','import-box']); return false;">Export</button>
-          <button type="button" id="show-import-box"onclick="showStuff('import-box', ['browse-box','structure-box','sql-box','export-box','database-box']); return false;">Import</button>
+          <form action="" method="post">
+              <button type="button" style="margin-left: 5px" id="show-database-box" onclick="showStuff('database-box', ['browse-box','structure-box','sql-box','export-box','import-box','update-box']); return false;">Databases</button>
+              <button type="button" id="show-infomation" onclick="showStuff('browse-box', ['database-box','structure-box','sql-box','export-box','import-box','update-box']); return false;">Browse</button>
+              <button type="button" id="show-structure" onclick="showStuff('structure-box', ['browse-box','database-box','sql-box','export-box','import-box','update-box']); return false;">Structure</button>
+              <button type="button" id="show-sql-box" onclick="showStuff('sql-box', ['browse-box','structure-box','database-box','export-box','import-box','update-box']); return false;">SQL</button>
+              <button type="button" id="show-export-box" onclick="showStuff('export-box', ['browse-box','structure-box','sql-box','database-box','import-box','update-box']); return false;">Export</button>
+              <button type="button" id="show-import-box" onclick="showStuff('import-box', ['browse-box','structure-box','sql-box','export-box','database-box','update-box']); return false;">Import</button>
+              <button type="button" id="show-import-box" onclick="showStuff('update-box', ['browse-box','structure-box','sql-box','export-box','import-box','database-box']); return false;">Update</button>
+              <button type="submit" name="exit-server-btn" style="float: right; margin-right: 5px">Logout</button>
+              <button type="submit" name="exit-db-btn" style="float: right; margin-right: 5px">Exit Database</button>
+              <button type="button" id="reload-box" style="float: right; margin-right: 5px" onClick="window.location.reload()">Reload</button>
+          </form>
         </div>
       </div>
     </div>
     <div id="wrapper" style="width:100%">
       <div id="list-databases" style="width:20%; float: left">
         <h4>DATABASES</h4><hr>
-        <form action="" method="post">
-          <select name="choose-database" onchange="this.form.submit()">
-        <?php
-          if ($_SESSION['database'] == null) {
-            $result_db = mysql_query('SHOW DATABASES;');
+        <fieldset>
+          <legend>Administrator</legend>
+          <form action="" method="post">
+            <select name="choose-database" onchange="this.form.submit()">
+            <?php
+              if ($_SESSION['database'] == null) {
+                $result_db = mysql_query('SHOW DATABASES;');
 
-            if (!$result_db) {
-              echo "DB Error, could not list tables\n";
-              echo 'MySQL Error: ' . mysql_error();
-              exit;
-            }
-
-            while($db = mysql_fetch_row($result_db)) {
-              echo '<option value="'.$db[0].'">'.$db[0].'</option>';
-            }
-          } else {
-            $result_db = mysql_query('SHOW DATABASES;');
-
-            if (!$result_db) {
-              echo "DB Error, could not list tables\n";
-              echo 'MySQL Error: ' . mysql_error();
-              exit;
-            }
-
-            while($db = mysql_fetch_row($result_db)) {
-              if ($db[0] == $_SESSION['database']) {
-                echo '<option value="'.$db[0].'" selected>'.$db[0].'</option>';
-              } else {
-                echo '<option value="'.$db[0].'">'.$db[0].'</option>';
-              }
-            }
-            echo '</select>';
-          }
-        ?>
-          </select>
-          <button type="button" id="show-add-db-box" onclick="showStuff('database-box', ['browse-box','structure-box','sql-box','export-box','import-box']); return false;">New</button>
-        </form>
-        <hr />
-        <h4>TABLES</h4><hr>
-        <?php
-          if ($_SESSION['database'] != null) {
-            $sql_tbl = "SHOW TABLES FROM ".$_SESSION['database'];
-            $result_tbl = mysql_query($sql_tbl);
-
-            if (!$result_tbl) {
-              echo "DB Error, could not list tables\n";
-              echo 'MySQL Error: ' . mysql_error();
-              exit;
-            }
-
-            echo '<form action="" method="post">';
-            $_tbl = array();
-            while ($row_tbl = mysql_fetch_row($result_tbl)) {
-              $_tbl[] = $row_tbl[0];
-              echo '<button type="submit" name="choose-table" value="'.$row_tbl[0].'">'.$row_tbl[0].'</button><hr />';
-            }
-            echo '</form>';
-          }
-        ?>
-      </div>
-      <div id="database-box" style="width: 80%; float: left<?php if($_SESSION['table'] != null) echo '; display: none'; ?>">
-          <h4>Databases</h4><hr>
-          <div id="content-db-box" style="width: 100%; float: left">
-            <div id="create-db-new" style="margin-left: 5px; width: 25%; float: left">
-              <fieldset>
-                <legend><i>Create Database</i></legend>
-                <form action="" method="POST">
-                  <input type="text" name="name_db" placeholder="Enter database name...">
-                  <button type="submit" name="add_db">Create</button>
-                </form>
-              </fieldset>
-            </div>
-            <div id="show-list-db-current" style="width: 74%; float: left">
-              <fieldset>
-                <legend><i>List databases</i></legend>
-                <form action="" method="POST">
-                  <?php
-                    $result_list_db = mysql_query('SHOW DATABASES;');
-
-                    if (!$result_list_db) {
-                      echo "DB Error, could not list tables\n";
-                      echo 'MySQL Error: ' . mysql_error();
-                      exit;
-                    }
-
-                    echo '<table border=1 style="width:99%; margin-left:2px; text-align:center">
-                    <thead>
-                      <tr style="background-color: #00ff00">
-                        <th></th>
-                        <th>Database</th>
-                      </tr>
-                      </thead>
-                      <tbody>';
-                      while($list_db = mysql_fetch_array($result_list_db)) {
-                          echo '<tr>
-                            <td><input type="checkbox" name="db_select[]" value="'.$list_db[0].'" /></td>
-                            <td>'.$list_db[0].'</td>
-                          </tr>';
-                      }
-                    echo '</tbody>
-                    </table>';
-                  ?>
-                  <input type="checkbox" onClick="toggle(this,'db_select[]')" /> Check All <i>With selected:</i>
-                  <button type="submit" name="drop-db" style="margin: 5px 0 0 5px">Drop</button>
-                </form>
-              </fieldset>
-            </div>
-          </div>
-      </div>
-      <div id="browse-box" style="width:80%; float: left<?php if($_SESSION['table'] == null) echo '; display: none'; ?>">
-        <h4>Showing rows</h4><hr>
-
-        <?php
-          if ($_SESSION['table'] != null) {
-            $txt_query = "DESCRIBE ".$_SESSION['table'];
-            $query_tbl_info = mysql_query($txt_query);
-            $tbl_nums_field = mysql_num_rows($query_tbl_info);
-            $query_tbl_row = mysql_query($txt_query);
-
-            echo '<form action="" method="post">
-            <table border=1 style="width:99%; margin-left:2px; text-align:center">
-            <thead>
-              <tr style="background-color: #00ff00">
-                <th></th>';
-              while($row_th = mysql_fetch_array($query_tbl_row)) {
-                  echo "<th>{$row_th['Field']}</th>";
-              }
-            echo '</tr>
-              </thead>
-            <tbody>';
-
-            $sql_query_from_tbl = "SELECT * FROM ".$_SESSION['table'];
-            $query_tbl_data = mysql_query($sql_query_from_tbl);
-            while($row_data = mysql_fetch_array($query_tbl_data)) {
-                echo "<tr>
-                <td><input type='checkbox' name='row_action[]' /></td>";
-                for ($i = 0; $i < $tbl_nums_field; $i++) {
-                  echo "<td>{$row_data[$i]}</td>";
+                if (!$result_db) {
+                  echo "DB Error, could not list tables\n";
+                  echo 'MySQL Error: ' . mysql_error();
+                  exit;
                 }
-                echo "</tr>";
-            }
-            echo '</tbody>
-            </table>
-            <input type="checkbox" onClick="'."toggle(this,'row_action[]')".'" /> Check All <i>With selected:</i>
-            <button type="submit" name="action-tbl-row" style="margin: 5px 0 0 5px">Drop</button>
-            </form>';
-          }
-        ?>
-      </div>
-      <div id="structure-box" style="width:80%; float: left; display: none">
-        <h4>Table Structure</h4><hr>
-        <?php
-          if ($_SESSION['table'] != null) {
-            $txt_query = "DESCRIBE ".$_SESSION['table'];
-            $query_tbl_info = mysql_query($txt_query);
-            $tbl_nums_field = mysql_num_rows($query_tbl_info);
-            $query_tbl_row = mysql_query($txt_query);
 
-            echo '<form action="" method="POST">
-            <table border=1 style="width:99%; margin-left:2px; text-align:center">
-            <thead>
-              <tr style="background-color: #00ff00">
-                <th></th>
-                <th>Field</th>
-                <th>Type</th>
-                <th>Null</th>
-                <th>Key</th>
-                <th>Default</th>
-                <th>Extra</th>
-              </tr>
-            </thead>
-            <tbody>';
-            while($row_info = mysql_fetch_array($query_tbl_info)) {
-                echo "<tr>
-                  <td><input type='checkbox' name='field_action[]' /></td>
-                  <td>{$row_info['Field']}</td>
-                  <td>{$row_info['Type']}</td>
-                  <td>{$row_info['Null']}</td>
-                  <td>{$row_info['Key']}</td>
-                  <td>{$row_info['Default']}</td>
-                  <td>{$row_info['Extra']}</td>
-                </tr>";
-            }
-            echo '</tbody>
-            </table>
-            <input type="checkbox" onClick="'."toggle(this,'field_action[]')".'" /> Check All <i>With selected:</i>
-            <button type="submit" name="drop-field" style="margin: 5px 0 0 5px">Drop</button>
-            </form>';
-          } else {
-            $sql_struc_tbl = "SHOW TABLES FROM ".$_SESSION['database'];
-            $result_struc_tbl = mysql_query($sql_struc_tbl);
+                while($db = mysql_fetch_row($result_db)) {
+                  if ($db[0] == 'information_schema' || $db[0] == 'mysql' || $db[0] == 'performance_schema') {
+                    // Do Not Something
+                  } else {
+                    echo '<option value="'.$db[0].'">'.$db[0].'</option>';
+                  }
+                }
+              } else {
+                $result_db = mysql_query('SHOW DATABASES;');
 
-            if (!$result_struc_tbl) {
-              echo "DB Error, could not list tables\n";
-              echo 'MySQL Error: ' . mysql_error();
-              exit;
-            }
+                if (!$result_db) {
+                  echo "DB Error, could not list tables\n";
+                  echo 'MySQL Error: ' . mysql_error();
+                  exit;
+                }
 
-            echo '<form action="" method="POST">
-            <table border=1 style="width:99%; margin-left:2px; text-align:center">
-            <thead>
-              <tr style="background-color: #00ff00">
-                <th></th>
-                <th>Table</th>
-                <th>Action</th>
-                <th>Rows</th>
-              </tr>
-            </thead>
-            <tbody>';
-            while ($row_struc_tbl = mysql_fetch_row($result_struc_tbl)) {
-              $num_rows_struc_tbl = mysql_num_rows(mysql_query("SELECT * FROM {$row_struc_tbl[0]}"));
-              echo "<tr>
-                    <td><input type='checkbox' name='tbl_action[]' /></td>
-                    <td>{$row_struc_tbl[0]}</td>
-                    <td>
-                      <a href='#'>Insert</a>
-                      <a href='#'>Empty</a>
-                      <a href='#'>Drop</a>
-                    </td>
-                    <td>{$num_rows_struc_tbl}</td>
-                 </tr>";
-            }
-            echo '</tbody>
-            </table>
-            <input type="checkbox" onClick="'."toggle(this,'tbl_action[]')".'" /> Check All <i>With selected:</i>
-            <button type="submit" name="drop-tbl" style="margin: 5px 0 0 5px">Drop</button>
-            </form>';
-          }
-        ?>
-      </div>
-      <div id="sql-box" style="width: 80%; float: left; display: none">
-          <h4>Run SQL query/queries <?php
-            if ($_SESSION['database']) echo $_SESSION['database'];
-            if ($_SESSION['table']) echo '.' . $_SESSION['table'];
-          ?></h4><hr>
-          <form action="" method="POST">
-            <textarea id="sql_box" name="sql_box" rows="8" style="width: 99%" value="" placeholder="...coding"></textarea>
-            <button type="button" id="select-all-sql" style="margin-left: 5px; float: left">SELECT *</button>
-            <button type="button" id="select-sql" style="margin-left: 5px; float: left">SELECT</button>
-            <button type="button" id="insert-sql" style="margin-left: 5px; float: left">INSERT</button>
-            <button type="button" id="update-sql" style="margin-left: 5px; float: left">UPDATE</button>
-            <button type="button" id="delete-sql" style="margin-left: 5px; float: left">DELETE</button>
-            <button type="button" id="clear-sql" style="margin-left: 5px; float: left">Clear</button>
-            <button type="submit" name="sql_qry" style="margin-left: 5px; float: right">Go</button>
+                while($db = mysql_fetch_row($result_db)) {
+                  if ($db[0] == 'information_schema' || $db[0] == 'mysql' || $db[0] == 'performance_schema') {
+                    // Do Not Something
+                  } else {
+                    if ($db[0] == $_SESSION['database']) {
+                      echo '<option value="'.$db[0].'" selected>'.$db[0].'</option>';
+                    } else {
+                      echo '<option value="'.$db[0].'">'.$db[0].'</option>';
+                    }
+                  }
+                }
+              }
+            ?>
+            </select>
+            <button type="button" id="show-add-db-box" onclick="showStuff('database-box', ['browse-box','structure-box','sql-box','export-box','import-box']); return false;">New</button>
           </form>
+          <?php
+            if ($_SESSION['database'] != null) {
+              $sql_tbl = "SHOW TABLES FROM ".$_SESSION['database'];
+              $result_tbl = mysql_query($sql_tbl);
+
+              if (!$result_tbl) {
+                echo "DB Error, could not list tables\n";
+                echo 'MySQL Error: ' . mysql_error();
+                exit;
+              }
+
+              echo '<i><strong>Tables</strong></i><hr />
+              <form action="" method="post">';
+              $_tbl = array();
+              while ($row_tbl = mysql_fetch_row($result_tbl)) {
+                $_tbl[] = $row_tbl[0];
+                echo '<button type="submit" name="choose-table" value="'.$row_tbl[0].'">'.$row_tbl[0].'</button><hr />';
+              }
+              echo '</form>';
+            }
+          ?>
+        </fieldset>
       </div>
-      <div id="export-box" style="width: 80%; float: left; display: none">
-          <h4>Exporting databases from the current server</h4><hr>
-      </div>
-      <div id="import-box" style="width: 80%; float: left; display: none">
-          <h4>Importing into the current server</h4><hr>
+      <div id="content-box" style="width: 80%; float: left;">
+        <div id="database-box" style="width: 100%; float: left<?php if($_SESSION['database'] == null) {echo '';} else {echo '; display: none';} ?>">
+            <h4>Databases</h4><hr>
+            <div id="content-db-box" style="width: 100%; float: left">
+              <div id="create-db-new" style="margin-left: 5px; width: 26%; float: left">
+                <fieldset>
+                  <legend><i>Create Database</i></legend>
+                  <form action="" method="POST">
+                    <input type="text" name="name_db" placeholder="Enter database name...">
+                    <button type="submit" name="add_db">Create</button>
+                  </form>
+                </fieldset>
+                <fieldset>
+                  <legend><i>Upload CT428</i></legend>
+                  <form method="post" enctype="multipart/form-data" >
+                      <input type="file" name="file_up[]" id="file-upload" multiple="true" />
+                      <input type="submit" name="upload-ct428" value="Upload" />
+                  </form>
+                </fieldset>
+                <?php
+                if ($_COOKIE['db_host'] == null && $_COOKIE['db_user'] == null && $_COOKIE['db_pass'] == null) {
+                  echo '<fieldset>
+                    <legend>Access Databases</legend>
+                    <form action="" method="post">
+                      <table>
+                        <tr>
+                          <td><label>Host: </label></td>
+                          <td><input type="text" name="db_host" placeholder="Enter Database Host..."></td>
+                        </tr>
+                        <tr>
+                          <td><label>Username: </label></td>
+                          <td><input type="text" name="db_user" placeholder="Enter Database Username..."></td>
+                        </tr>
+                        <tr>
+                          <td><label>Password: </label></td>
+                          <td><input type="text" name="db_pass" placeholder="Enter Database Password..."></td>
+                        </tr>
+                      </table>
+                      <button type="submit" name="access-db">Access</button>
+                      <button type="submit" name="access-db-ampps">Ampps</button>
+                      <button type="submit" name="access-db-cit">172.30.35.70</button>
+                    </form>
+                  </fieldset>';
+                } else {
+                  echo '<fieldset>
+                    <legend>Server Infomation</legend>
+                    <span>Server: <b style="color: blue">' . $_COOKIE['db_host'] . '</b></span><br />
+                    <form action="" method="POST">
+                      <span>Action: </span>
+                      <button type="submit" name="exit-server-btn" style="float: right; margin-right: 5px">Logout Server</button>
+                      <button type="submit" name="exit-db-btn" style="float: right; margin-right: 5px">Exit Database</button>
+                    </form>
+                  </fieldset>';
+                }
+                ?>
+              </div>
+              <div id="show-list-db-current" style="width: 73%; float: left">
+                <fieldset>
+                  <legend><i>List databases</i></legend>
+                  <form action="" method="POST">
+                    <?php
+                      $result_list_db = mysql_query('SHOW DATABASES;');
+
+                      if (!$result_list_db) {
+                        echo "DB Error, could not list tables\n";
+                        echo 'MySQL Error: ' . mysql_error();
+                        exit;
+                      }
+
+                      echo '<table border=1 style="width:99%; margin-left:2px; text-align:center">
+                      <thead>
+                        <tr style="background-color: #00ff00">
+                          <th><input type="checkbox" onClick="'."toggle(this,'db_select[]')".'" /></th>
+                          <th>Database</th>
+                        </tr>
+                        </thead>
+                        <tbody>';
+                        while($list_db = mysql_fetch_array($result_list_db)) {
+                          if ($list_db[0] == 'information_schema' || $list_db[0] == 'mysql' || $list_db[0] == 'performance_schema') {
+                            // Do Not Something
+                          } else {
+                            echo '<tr>
+                              <td><input type="checkbox" name="db_select[]" value="'.$list_db[0].'" /></td>
+                              <td>'.$list_db[0].'</td>
+                            </tr>';
+                          }
+                        }
+                      echo '</tbody>
+                      </table>';
+                    ?>
+                    <i>With selected:</i>
+                    <button type="submit" name="drop-db" style="margin: 5px 0 0 5px">Drop</button>
+                  </form>
+                </fieldset>
+              </div>
+            </div>
+        </div>
+        <div id="browse-box" style="width:100%; float: left<?php if($_SESSION['table'] == null) echo '; display: none'; ?>">
+          <h4>Browsing rows</h4><hr>
+          <fieldset>
+            <legend>Rows</legend>
+            <?php
+              if ($_SESSION['table'] != null) {
+                $txt_query = "DESCRIBE ".$_SESSION['table'];
+                $query_tbl_info = mysql_query($txt_query);
+                $tbl_nums_field = mysql_num_rows($query_tbl_info);
+                $query_tbl_row = mysql_query($txt_query);
+
+                echo '<form action="" method="post">
+                <table border=1 style="width:99%; margin-left:2px; text-align:center">
+                <thead>
+                  <tr style="background-color: #00ff00">
+                    <th><input type="checkbox" onClick="'."toggle(this,'row_action[]')".'" /></th>';
+                  while($row_th = mysql_fetch_array($query_tbl_row)) {
+                      echo "<th>{$row_th['Field']}</th>";
+                  }
+                echo '</tr>
+                  </thead>
+                <tbody>';
+
+                $sql_query_from_tbl = "SELECT * FROM ".$_SESSION['table'];
+                $query_tbl_data = mysql_query($sql_query_from_tbl);
+                while($row_data = mysql_fetch_array($query_tbl_data)) {
+                    echo "<tr>
+                    <td><input type='checkbox' name='row_action[]' /></td>";
+                    for ($i = 0; $i < $tbl_nums_field; $i++) {
+                      echo "<td>{$row_data[$i]}</td>";
+                    }
+                    echo "</tr>";
+                }
+                echo '</tbody>
+                </table>
+                <i>With selected:</i>
+                <button type="submit" name="action-tbl-row" style="margin: 5px 0 0 5px">Delete</button>
+                </form>';
+              }
+            ?>
+          </fieldset>
+        </div>
+        <div id="structure-box" style="width:100%; float: left<?php if(($_SESSION['database'] != null) && ($_SESSION['table'] == null)) {echo '';} else if(($_SESSION['database'] != null) && ($_SESSION['table'] != null)) {echo '';} else {echo '; display: none';} ?>">
+          <h4>Table Structure</h4><hr>
+          <fieldset>
+            <legend>Structure</legend>
+            <?php
+              if ($_SESSION['table'] != null) {
+                $txt_query = "DESCRIBE ".$_SESSION['table'];
+                $query_tbl_info = mysql_query($txt_query);
+                $tbl_nums_field = mysql_num_rows($query_tbl_info);
+                $query_tbl_row = mysql_query($txt_query);
+
+                echo '<form action="" method="POST">
+                <table border=1 style="width:99%; margin-left:2px; text-align:center">
+                <thead>
+                  <tr style="background-color: #00ff00">
+                    <th><input type="checkbox" name="field_action[]" /></th>
+                    <th>Field</th>
+                    <th>Type</th>
+                    <th>Null</th>
+                    <th>Key</th>
+                    <th>Default</th>
+                    <th>Extra</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>';
+                while($row_info = mysql_fetch_array($query_tbl_info)) {
+                    echo "<tr>
+                      <td><input type='checkbox' name='field_action[]' /></td>
+                      <td>{$row_info['Field']}</td>
+                      <td>{$row_info['Type']}</td>
+                      <td>{$row_info['Null']}</td>
+                      <td>{$row_info['Key']}</td>
+                      <td>{$row_info['Default']}</td>
+                      <td>{$row_info['Extra']}</td>
+                      <td>
+                          <a href='#'>Change</a> |
+                          <a href='#'>Drop</a> |
+                          <a href='#'>Set Primary</a> |
+                          <a href='#'>Unset Primary</a>
+                      </td>
+                    </tr>";
+                }
+                echo '</tbody>
+                </table>
+                <i>With selected:</i>
+                <button type="submit" name="action-field-drop" style="margin: 5px 0 0 5px">Drop</button>
+                <button type="submit" name="action-field-primary" style="margin: 5px 0 0 5px">Primary</button>
+                </form>';
+              } else {
+                $sql_struc_tbl = "SHOW TABLES FROM ".$_SESSION['database'];
+                $result_struc_tbl = mysql_query($sql_struc_tbl);
+
+                if (!$result_struc_tbl) {
+                  echo "<i><strong>Please choose database for view</strong></i>";
+                  // echo "DB Error, could not list tables\n";
+                  // echo 'MySQL Error: ' . mysql_error();
+                  // exit;
+                } else {
+                  echo '<form action="" method="POST">
+                  <table border=1 style="width:99%; margin-left:2px; text-align:center">
+                  <thead>
+                    <tr style="background-color: #00ff00">
+                      <th><input type="checkbox" onClick="'."toggle(this,'tbl_action[]')".'" /></th>
+                      <th>Table</th>
+                      <th>Action</th>
+                      <th>Rows</th>
+                    </tr>
+                  </thead>
+                  <tbody>';
+                  while ($row_struc_tbl = mysql_fetch_row($result_struc_tbl)) {
+                    $num_rows_struc_tbl = mysql_num_rows(mysql_query("SELECT * FROM {$row_struc_tbl[0]}"));
+                    if (!$num_rows_struc_tbl) echo '<meta http-equiv="refresh" content="0">';
+
+                    echo "<tr>
+                          <td><input type='checkbox' name='tbl_action[]' /></td>
+                          <td>{$row_struc_tbl[0]}</td>
+                          <td>
+                            <a href='#'>Insert</a> |
+                            <a href='#'>Empty</a> |
+                            <a href='#'>Drop</a>
+                          </td>
+                          <td>{$num_rows_struc_tbl}</td>
+                        </tr>";
+                  }
+                  echo '</tbody>
+                  </table>
+                  <select name="action-tbl" style="margin: 5px 0 0 5px" onchange="this.form.submit()">
+                    <option>With selected: </option>
+                    <option value="export">Export </option>
+                    <option value="empty">Empty </option>
+                    <option value="drop">Drop </option>
+                  </select>
+                  </form>';
+                }
+              }
+            ?>
+          </fieldset>
+        </div>
+        <div id="sql-box" style="width: 100%; float: left; display: none">
+            <h4>Run SQL query/queries <?php
+              if ($_SESSION['database']) echo $_SESSION['database'];
+              if ($_SESSION['table']) echo '.' . $_SESSION['table'];
+            ?></h4><hr>
+            <fieldset>
+              <legend>Run SQL query/queries</legend>
+              <form action="" method="POST">
+                <textarea id="sql_box" name="sql_box" rows="8" style="width: 99%" value="" placeholder="...coding"></textarea>
+                <button type="button" id="select-all-sql" style="margin-left: 5px; float: left">SELECT *</button>
+                <button type="button" id="select-sql" style="margin-left: 5px; float: left">SELECT</button>
+                <button type="button" id="insert-sql" style="margin-left: 5px; float: left">INSERT</button>
+                <button type="button" id="update-sql" style="margin-left: 5px; float: left">UPDATE</button>
+                <button type="button" id="delete-sql" style="margin-left: 5px; float: left">DELETE</button>
+                <button type="button" id="clear-sql" style="margin-left: 5px; float: left">Clear</button>
+                <button type="submit" name="sql_qry" style="margin-left: 5px; float: right">Go</button>
+              </form>
+            </fieldset>
+        </div>
+        <div id="export-box" style="width: 100%; float: left; display: none">
+            <h4>Exporting databases from the current server</h4><hr>
+            <fieldset>
+              <legend>Export</legend>
+              <form method="post" enctype="multipart/form-data" >
+                  <label for="file">Choosefile :</label>
+                  <input type="file" name="export-file" id="export-file" />
+                  <!-- <input type="submit" name="export-btn" value="Export" /> -->
+              </form>
+            </fieldset>
+        </div>
+        <div id="import-box" style="width: 100%; float: left; display: none">
+            <h4>Importing into the current server</h4><hr>
+            <fieldset>
+              <legend>Import</legend>
+              <form method="post" enctype="multipart/form-data" >
+                  <label for="file">Choosefile :</label>
+                  <input type="file" name="import-file" id="import-file" />
+                  <!-- <input type="submit" name="import-btn" value="Import" /> -->
+              </form>
+            </fieldset>
+        </div>
+        <div id="update-box" style="width: 100%; float: left; display: none">
+            <h4>Update MySQLAdmin</h4><hr>
+            <fieldset>
+              <legend>Update</legend>
+              <form method="post" enctype="multipart/form-data" >
+                  <label for="file">Choosefile :</label>
+                  <input type="file" name="file-update" id="file-update" />
+                  <input type="submit" name="update-myadmin" value="Update" />
+              </form>
+            </fieldset>
+        </div>
       </div>
     </div>
   </body>
