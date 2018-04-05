@@ -426,8 +426,8 @@ mysql_select_db($db_name) or die("mysql can not find");
               <center>
                 <form action="" method="post">
                   <label>Thêm đơn vị</label>
-                  <input type="text" name="madv" placeholder="Nhập mã đơn vị">
-                  <input type="text" name="dvi" placeholder="Nhập tên đơn vị">
+                  <input type="text" name="madv" placeholder="Nhập mã đơn vị" required />
+                  <input type="text" name="dvi" placeholder="Nhập tên đơn vị" required />
                   <button type="submit" name="add_dvi">Thêm</button>
                 </form>
                 <hr>
@@ -461,8 +461,8 @@ mysql_select_db($db_name) or die("mysql can not find");
               <center>
                 <form action="" method="post">
                   <label>Thêm chức vụ</label>
-                  <input type="text" name="macv" placeholder="Nhập mã chức vụ">
-                  <input type="text" name="cvu" placeholder="Nhập tên chức vụ">
+                  <input type="text" name="macv" placeholder="Nhập mã chức vụ" required />
+                  <input type="text" name="cvu" placeholder="Nhập tên chức vụ" required />
                   <button type="submit" name="add_cvu">Thêm</button>
                 </form>
                 <hr>
