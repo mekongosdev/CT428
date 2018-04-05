@@ -122,7 +122,7 @@ mysql_select_db($db_name) or die("mysql can not find");
             margin-right: 5px;
         }
 
-        #qly-don-vi, #qly-chuc-vu {
+        #qly-nhan-vien, #qly-don-vi, #qly-chuc-vu {
             display: none;
         }
 
@@ -152,9 +152,10 @@ mysql_select_db($db_name) or die("mysql can not find");
       <div class="menu-left">
         <div class="menu-bar">
           <ul>
-            <li><a onclick="showStuff('trang-chu', ['qly-don-vi','qly-chuc-vu','chinh-sua-nvien','chinh-sua-don-vi','chinh-sua-chuc-vu']); return false;">Trang chủ</a></li>
-            <li><a onclick="showStuff('qly-don-vi', ['trang-chu','qly-chuc-vu','chinh-sua-nvien','chinh-sua-don-vi','chinh-sua-chuc-vu']); return false;">Quản lý đơn vị</a></li>
-            <li><a onclick="showStuff('qly-chuc-vu', ['qly-don-vi','trang-chu','chinh-sua-nvien','chinh-sua-don-vi','chinh-sua-chuc-vu']); return false;">Quản lý chức vụ</a></li>
+            <li><a onclick="showStuff('trang-chu', ['qly-nhan-vien','qly-don-vi','qly-chuc-vu']); return false;">Trang chủ</a></li>
+            <li><a onclick="showStuff('qly-nhan-vien', ['trang-chu', 'qly-don-vi','qly-chuc-vu']); return false;">Quản lý nhân viên</a></li>
+            <li><a onclick="showStuff('qly-don-vi', ['qly-nhan-vien', 'trang-chu','qly-chuc-vu']); return false;">Quản lý đơn vị</a></li>
+            <li><a onclick="showStuff('qly-chuc-vu', ['qly-nhan-vien', 'qly-don-vi','trang-chu']); return false;">Quản lý chức vụ</a></li>
           </ul>
         </div>
       </div>
@@ -162,6 +163,37 @@ mysql_select_db($db_name) or die("mysql can not find");
         <div class="khung-nhin">
           <fieldset id="trang-chu">
             <legend><h2>TRANG CHỦ</h2></legend>
+            <fieldset>
+              <table border=1 style="text-align: center; width: 100%">
+                <thead>
+                  <tr>
+                    <th>MANV</th>
+                    <th>HÌNH ẢNH</th>
+                    <th>HỌ TÊN</th>
+                    <th>NGÀY SINH</th>
+                    <th>GIỚI TÍNH</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                    $sql_qry_list_nvien = "SELECT * FROM loc_thuc_nhanvien a, loc_thuc_donvi b, loc_thuc_chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ltweb
+                    $qry_list_nvien = mysql_query($sql_qry_list_nvien);
+                    while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
+                      echo "<tr>";
+                      echo "<td>{$row_list_nvien['manv']}</td>";
+                      echo "<td>{$row_list_nvien['hinhanh']}</td>";
+                      echo "<td>{$row_list_nvien['hoten']}</td>";
+                      echo "<td>{$row_list_nvien['namsinh']}</td>";
+                      echo "<td>{$row_list_nvien['gioitinh']}</td>";
+                      echo "</tr>";
+                    }
+                  ?>
+                </tbody>
+              </table>
+            </fieldset>
+          </fieldset>
+          <fieldset id="qly-nhan-vien">
+            <legend><h2>NHÂN VIÊN</h2></legend>
             <fieldset>
               <legend>Quản lý nhân viên</legend>
               <form action="" method="post">
@@ -443,7 +475,7 @@ mysql_select_db($db_name) or die("mysql can not find");
 </html>
 
 <?php
-// Thuchanh_3
+// Thuchanh_3: HTML, PHP, MySQL
 // // Thêm đơn vị
 if(isset($_POST['add_dvi'])) {
   $sql_insert_cvu = "INSERT INTO loc_thuc_donvi VALUES ('{$_POST['madv']}', '{$_POST['dvi']}')"; // Ltweb
@@ -465,4 +497,17 @@ if(isset($_POST['add_cvu'])) {
 
   echo '<meta http-equiv="refresh" content="0">';
 }
+
+// Thuchanh_4: HTML, PHP, MySQL
+// // Thêm nhân viên
+
+// // Thêm ảnh nhân viên
+
+// Thuchanh_5: HTML, PHP, MySQL
+// // Cập nhật thông tin nhân viên
+
+// // Xóa nhân viên
+
+// Thuchanh_6: Hoàn chỉnh giao diện
+
 ?>
