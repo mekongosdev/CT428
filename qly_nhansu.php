@@ -230,11 +230,11 @@ mysql_select_db($db_name) or die("mysql can not find");
                       <table border="1">
                         <tr>
                           <td><strong>MANV</strong></td>
-                          <td><input type="text" name="manv" placeholder="Nhập mã số nhân viên..." /></td>
+                          <td><input type="text" name="manv" placeholder="Nhập mã số nhân viên..." required /></td>
                         </tr>
                         <tr>
                           <td><strong>HỌ TÊN</strong></td>
-                          <td><input type="text" name="hoten" placeholder="Nhập họ tên nhân viên..." /></td>
+                          <td><input type="text" name="hoten" placeholder="Nhập họ tên nhân viên..." required /></td>
                         </tr>
                         <tr>
                           <td><strong>NGÀY SINH</strong></td>
@@ -277,7 +277,7 @@ mysql_select_db($db_name) or die("mysql can not find");
                         </tr>
                         <tr>
                           <td><strong>LƯƠNG (nghìn đồng)</strong></td>
-                          <td><input type="number" min="1000" name="luong" placeholder="Nhập lương nhân viên..." /></td>
+                          <td><input type="number" min="1000" name="luong" placeholder="Nhập lương nhân viên..." required /></td>
                         </tr>
                       </table>
                       <input type="submit" name="sua-nvien" value="Lưu thay đổi">
@@ -294,7 +294,7 @@ mysql_select_db($db_name) or die("mysql can not find");
                         </tr>
                         <tr>
                           <td><strong>HỌ TÊN</strong></td>
-                          <td><input type="text" name="hoten" id="hoten" placeholder="Nhập họ tên nhân viên..." /></td>
+                          <td><input type="text" name="hoten" id="hoten" placeholder="Nhập họ tên nhân viên..." required /></td>
                         </tr>
                         <tr>
                           <td><strong>NGÀY SINH</strong></td>
@@ -337,7 +337,7 @@ mysql_select_db($db_name) or die("mysql can not find");
                         </tr>
                         <tr>
                           <td><strong>LƯƠNG (nghìn đồng)</strong></td>
-                          <td><input type="number" min="1000" name="luong" id="luong" placeholder="Nhập lương nhân viên..." /></td>
+                          <td><input type="number" min="1000" name="luong" id="luong" placeholder="Nhập lương nhân viên..." required /></td>
                         </tr>
                       </table>
                       <input type="submit" name="sua-nvien" value="Lưu thay đổi">
