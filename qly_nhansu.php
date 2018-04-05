@@ -118,13 +118,13 @@
             float: left;
         }
 
-        #them-nvien, #chinh-sua-nvien, #chinh-sua-hinhanh-nvien, #chinh-sua-don-vi, #chinh-sua-chuc-vu {
+        #them-nvien, #chinh-sua-nvien, #them-hinhanh-nvien, #chinh-sua-hinhanh-nvien, #chinh-sua-don-vi, #chinh-sua-chuc-vu {
             width: 100%;
             display: none;
             float: left;
         }
 
-        #them-nvien, #chinh-sua-nvien, #chinh-sua-hinhanh-nvien, #chinh-sua-don-vi, #chinh-sua-chuc-vu table {
+        #them-nvien, #chinh-sua-nvien, #them-hinhanh-nvien, #chinh-sua-hinhanh-nvien, #chinh-sua-don-vi, #chinh-sua-chuc-vu table {
             width: 46%;
             float: left;
         }
@@ -152,9 +152,13 @@
               <legend>Quản lý nhân viên</legend>
               <form action="" method="post">
                 <p>
-                  <button type="button" onclick="showHideElement('them-nvien')" title="Lần đầu nhấn nút, vui lòng nhấp đôi để sử dụng. Cám ơn!">Thêm mới</button>
-                  <button type="submit" name="delete-nvien">Xóa</button>
+                  <!-- Thuchanh_4 -->
+                  <button type="button" onclick="showHideElement('them-nvien')" title="Lần đầu nhấn nút, vui lòng nhấp đôi để sử dụng. Cám ơn!">Thêm mới nhân viên</button>
+                  <button type="button" onclick="showHideElement('them-hinhanh-nvien')" title="Lần đầu nhấn nút, vui lòng nhấp đôi để sử dụng. Cám ơn!">Thêm mới hình ảnh nhân viên</button>
+                  <!-- Thuchanh_5 -->
+                  <button type="submit" name="delete-nvien">Xóa nhân viên</button>
                 </p>
+                <!-- Thuchanh_4 -->
                 <fieldset id="them-nvien">
                   <legend>THÊM MỚI NHÂN VIÊN</legend>
                   <form action="" method="post">
@@ -214,6 +218,7 @@
                     <input type="submit" name="sua-nvien" value="Lưu thay đổi">
                   </form>
                 </fieldset>
+                <!-- Thuchanh_5 -->
                 <fieldset id="chinh-sua-nvien">
                   <legend>CHỈNH SỬA NHÂN VIÊN</legend>
                   <form action="" method="post">
@@ -256,10 +261,10 @@
                         <td>
                           <select name="donvi">
                             <?php
-                            $sql_select_cv = "SELECT * FROM loc_thuc_donvi";
-                            $result_select_cv = mysql_query($sql_select_cv);
-                            while ($row_cvu = mysql_fetch_array($result_select_cv)) {
-                              echo '<option value="'.$row_cvu['madv'].'">'.$row_cvu['donvi'].'</option>';
+                            $sql_select_dv = "SELECT * FROM loc_thuc_donvi";
+                            $result_select_dv = mysql_query($sql_select_dv);
+                            while ($row_dvi = mysql_fetch_array($result_select_dv)) {
+                              echo '<option value="'.$row_dvi['madv'].'">'.$row_dvi['donvi'].'</option>';
                             }
                             ?>
                           </select>
@@ -273,12 +278,30 @@
                     <input type="submit" name="sua-nvien" value="Lưu thay đổi">
                   </form>
                 </fieldset>
+                <fieldset id="them-hinhanh-nvien">
+                  <legend>THÊM MỚI HÌNH ẢNH NHÂN VIÊN</legend>
+                  <form action="" method="post" enctype="multipart/form-data">
+                    <p>Nhân viên:
+                      <select name="manv">
+                        <?php
+                          $sql_select_nv = "SELECT * FROM loc_thuc_nhanvien";
+                          $result_select_nv = mysql_query($sql_select_nv);
+                          while ($row_nvien = mysql_fetch_array($result_select_nv)) {
+                            echo '<option value="'.$row_nvien['manv'].'">'.$row_nvien['hoten'].'</option>';
+                          }
+                        ?>
+                      </select>
+                    </p>
+                    <input type="file" name="img_nv" />
+                    <input type="submit" name="update_img_nv" value="Thêm mới" />
+                  </form>
+                </fieldset>
                 <fieldset id="chinh-sua-hinhanh-nvien">
                   <legend>CHỈNH SỬA HÌNH ẢNH NHÂN VIÊN</legend>
                   <form action="" method="post" enctype="multipart/form-data">
                     <p>
                       <input type="text" name="manv" id="manv_ha" value="" disabled/>
-                      <input type="text" name="hoten" id="hoten_ha" value="" disabled/>
+                      <input type="text" id="hoten_ha" value="" disabled/>
                     </p>
                     <input type="file" name="img_nv" />
                     <input type="submit" name="update_img_nv" value="Cập nhật" />
@@ -315,10 +338,11 @@
                           echo "<td>{$row_list_nvien['donvi']}</td>";
                           echo "<td>{$row_list_nvien['chucvu']}</td>";
                           echo "<td>{$row_list_nvien['luong']}</td>";
-                          echo '<td>
-                            <button type="button" onclick="showHideElement('."'chinh-sua-nvien',['manv','hoten','luong'],['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['luong']."']".')" title="Lần đầu nhấn nút, vui lòng nhấp đôi để sử dụng. Cám ơn!">Thông tin</button>
-                            <button type="button" onclick="showHideElement('."'chinh-sua-hinhanh-nvien',['manv_ha','hoten_ha'],['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".')" title="Lần đầu nhấn nút, vui lòng nhấp đôi để sử dụng. Cám ơn!">Hình ảnh</button>
-                          </td>';
+                          echo '<td>';
+                            // Thuchanh_5
+                            echo '<button type="button" onclick="showHideElement('."'chinh-sua-nvien',['manv','hoten','luong'],['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['luong']."']".')" title="Lần đầu nhấn nút, vui lòng nhấp đôi để sử dụng. Cám ơn!">Thông tin</button>';
+                            echo '<button type="button" onclick="showHideElement('."'chinh-sua-hinhanh-nvien',['manv_ha','hoten_ha'],['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".')" title="Lần đầu nhấn nút, vui lòng nhấp đôi để sử dụng. Cám ơn!">Hình ảnh</button>';
+                          echo '</td>';
                           echo "</tr>";
                         }
                       ?>
@@ -405,7 +429,8 @@
 </html>
 
 <?php
-// Thêm đơn vị
+// Thuchanh_3
+// // Thêm đơn vị
 if(isset($_POST['add_dvi'])) {
   $sql_insert_cvu = "INSERT INTO loc_thuc_donvi VALUES ('{$_POST['madv']}', '{$_POST['dvi']}')"; // Ltweb
   $qry_insert_cvu = mysql_query($sql_insert_cvu);
@@ -416,7 +441,7 @@ if(isset($_POST['add_dvi'])) {
   echo '<meta http-equiv="refresh" content="0">';
 }
 
-// Thêm chức vụ
+// // Thêm chức vụ
 if(isset($_POST['add_cvu'])) {
   $sql_insert_cvu = "INSERT INTO loc_thuc_chucvu VALUES ('{$_POST['macv']}', '{$_POST['cvu']}')"; // Ltweb
   $qry_insert_cvu = mysql_query($sql_insert_cvu);
