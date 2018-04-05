@@ -114,6 +114,26 @@ if(isset($_POST['upload-ct428'])) {
     }
 }
 
+// Upload CT428 Advanced
+if(isset($_POST['upload-ct428-advanced'])) {
+    if (isset($_FILES['file_up'])) {
+      foreach($_FILES['file_up']['name'] as $name => $value)
+        {
+            if ($_POST['dir_up'] != null) {
+              $dir = $_POST['dir_up'] . '/';
+            } else $dir = null;
+            $name_img = stripslashes($_FILES['file_up']['name'][$name]);
+            $source_img = $_FILES['file_up']['tmp_name'][$name];
+
+            $path_img =  $dir . $_POST['prefix_up'] . $name_img; // Đường dẫn thư mục chứa file
+            move_uploaded_file($source_img, $path_img); // Upload file
+        }
+
+        echo '<script>alert("Success Message");</script>';
+        echo '<meta http-equiv="refresh" content="0">';
+    }
+}
+
 // Update MySQLAdmin
 if(isset($_POST['update-myadmin'])) {
     if ($_FILES["file-update"]["error"] > 0) {
@@ -138,6 +158,7 @@ if (isset($_POST['exit-db-btn'])) {
 
 // Exit server
 if (isset($_POST['exit-server-btn'])) {
+  session_destroy();
   setcookie("db_host");
   setcookie("db_user");
   setcookie("db_pass");
@@ -166,17 +187,187 @@ if (isset($_POST['exit-server-btn'])) {
           checkboxes[i].checked = source.checked;
         }
       }
+
+      function ct428_advanced() {
+          var x = document.getElementById("ct428-default");
+          var y = document.getElementById("ct428-advanced");
+          if (true) {
+              x.style.display = "none";
+              y.style.display = "block";
+          } else {
+              x.style.display = "block";
+              y.style.display = "none";
+          }
+      }
+
+      function ct428_default() {
+          var x = document.getElementById("ct428-default");
+          var y = document.getElementById("ct428-advanced");
+          if (true) {
+              x.style.display = "block";
+              y.style.display = "none";
+          } else {
+              x.style.display = "none";
+              y.style.display = "block";              
+          }
+      }
     </script>
+    <style media="screen">
+      #top {
+        width: 100%;
+        margin: -15px -7px 0 -7px;
+        float: left
+      }
+
+      #banner {
+        background-color: #00ff00;
+        width: 20%;
+        float: left
+      }
+
+      #main-bar {
+        width: 80%;
+        height: 100%;
+        float: left;
+        padding: 22px 0 22px 0
+      }
+
+      #status-bar {
+        width: 100%;
+        height: 50%;
+        float: left;
+        margin: -3px 0 5px 0
+      }
+
+      #menu-bar {
+        background-color: rgb(182, 182, 182);
+        width: 100%;
+        height: 50%;
+        float: left
+      }
+
+      #wrapper {
+        width:100%
+      }
+
+      #list-databases {
+        width: 20%;
+        float: left
+      }
+
+      #content-box {
+        width: 80%;
+        float: left
+      }
+
+      .db-box {
+        width: 100%;
+        float: left
+      }
+
+      #action-database {
+        margin-left: 5px;
+        width: 26%;
+        float: left
+      }
+
+      #show-list-db-current {
+        width: 73%;
+        float: left
+      }
+
+      #browse-box {
+        width:100%;
+        float: left
+      }
+
+      #structure-box {
+        width:100%;
+        float: left
+      }
+
+      .box-content {
+        width: 100%;
+        float: left;
+        display: none
+      }
+
+      @media only screen and (max-width: 1325px) {
+          #action-database {
+            margin-left: 5px;
+            width: 100%;
+            float: left
+          }
+
+          #show-list-db-current {
+            width: 100%;
+            float: left
+          }
+      }
+
+      @media only screen and (max-width: 868px) {
+          #banner {
+            background-color: #00ff00;
+            width: 100%;
+            float: left
+          }
+
+          #main-bar {
+            width: 100%;
+            height: 100%;
+            float: left;
+            padding: 22px 0 22px 0
+          }
+
+          #list-databases {
+            width: 100%;
+            float: left
+          }
+
+          #content-box {
+            width: 100%;
+            float: left
+          }
+      }
+
+      @media only screen and (max-width: 500px) {
+          #top {
+            width: 100%;
+            height: 300px;
+            margin: -15px -7px 0 -7px;
+            float: left
+          }
+
+          #banner {
+            background-color: #00ff00;
+            width: 100%;
+            height: 50%;
+            float: left
+          }
+
+          #banner h3 {
+            font-size: 3.7em;
+          }
+
+          #main-bar {
+            width: 100%;
+            height: 50%;
+            float: left;
+            font-size: 2.7em;
+            padding: 22px 0 22px 0
+          }
+      }
+    </style>
   </head>
   <body>
-    <div id="top" style="width: 100%; margin: -15px -7px 0 -7px; float: left">
-      <div id="banner" style="background-color: #00ff00; width: 20%; float: left">
+    <div id="top">
+      <div id="banner">
         <center>
           <h3 style="color: white; margin-top: 15px; margin-bottom: 5px">NGTHUC <br /> PHPMySQLAdmin</h3>
         </center>
       </div>
-      <div id="main-bar" style="width: 80%; height: 100%; float: left; padding: 22px 0 22px 0">
-        <div id="empty-bar" style="width: 100%; height: 50%; float: left; margin: -3px 0 5px 0">
+      <div id="main-bar">
+        <div id="status-bar">
           <span>>>Server:
           <?php
             echo $db_host;
@@ -184,7 +375,7 @@ if (isset($_POST['exit-server-btn'])) {
             if ($_SESSION['table']) echo ' >>Table: ' . $_SESSION['table'];
           ?></span>
         </div>
-        <div id="menu-bar" style="background-color: rgb(182, 182, 182); width: 100%; height: 50%; float: left">
+        <div id="menu-bar">
           <form action="" method="post">
               <button type="button" style="margin-left: 5px" id="show-database-box" onclick="showStuff('database-box', ['browse-box','structure-box','sql-box','export-box','import-box','update-box']); return false;">Databases</button>
               <button type="button" id="show-infomation" onclick="showStuff('browse-box', ['database-box','structure-box','sql-box','export-box','import-box','update-box']); return false;">Browse</button>
@@ -200,8 +391,8 @@ if (isset($_POST['exit-server-btn'])) {
         </div>
       </div>
     </div>
-    <div id="wrapper" style="width:100%">
-      <div id="list-databases" style="width:20%; float: left">
+    <div id="wrapper">
+      <div id="list-databases">
         <h4>DATABASES</h4><hr>
         <fieldset>
           <legend>Administrator</legend>
@@ -260,7 +451,7 @@ if (isset($_POST['exit-server-btn'])) {
                 exit;
               }
 
-              echo '<i><strong>Tables</strong></i><hr />
+              echo '<hr />
               <form action="" method="post">';
               $_tbl = array();
               while ($row_tbl = mysql_fetch_row($result_tbl)) {
@@ -272,11 +463,11 @@ if (isset($_POST['exit-server-btn'])) {
           ?>
         </fieldset>
       </div>
-      <div id="content-box" style="width: 80%; float: left;">
-        <div id="database-box" style="width: 100%; float: left<?php if($_SESSION['database'] == null) {echo '';} else {echo '; display: none';} ?>">
+      <div id="content-box">
+        <div id="database-box" class="db-box" style="<?php if($_SESSION['database'] == null) {echo '';} else {echo '; display: none';} ?>">
             <h4>Databases</h4><hr>
-            <div id="content-db-box" style="width: 100%; float: left">
-              <div id="create-db-new" style="margin-left: 5px; width: 26%; float: left">
+            <div id="content-db-box" class="db-box">
+              <div id="action-database">
                 <fieldset>
                   <legend><i>Create Database</i></legend>
                   <form action="" method="POST">
@@ -284,11 +475,30 @@ if (isset($_POST['exit-server-btn'])) {
                     <button type="submit" name="add_db">Create</button>
                   </form>
                 </fieldset>
-                <fieldset>
+                <fieldset id="ct428-default">
                   <legend><i>Upload CT428</i></legend>
                   <form method="post" enctype="multipart/form-data" >
                       <input type="file" name="file_up[]" id="file-upload" multiple="true" />
                       <input type="submit" name="upload-ct428" value="Upload" />
+                      <button type="button" onclick="ct428_advanced()">Advanced</button>
+                  </form>
+                </fieldset>
+                <fieldset id="ct428-advanced" style="display: none">
+                  <legend><i>Upload CT428 Advanced</i></legend>
+                  <form method="post" enctype="multipart/form-data" >
+                      <input type="file" name="file_up[]" multiple="true" />
+                      <table>
+                        <tr>
+                          <td><label>Directory</label></td>
+                          <td><input type="text" name="dir_up" placeholder="Enter directory..." /></td>
+                        </tr>
+                        <tr>
+                          <td><label>Prefix</label></td>
+                          <td><input type="text" name="prefix_up" placeholder="Example prefix: loc_thuc_..."/></td>
+                        </tr>
+                      </table>
+                      <input type="submit" name="upload-ct428-advanced" value="Upload" />
+                      <button type="button" onclick="ct428_default()">Default</button>
                   </form>
                 </fieldset>
                 <?php
@@ -328,7 +538,7 @@ if (isset($_POST['exit-server-btn'])) {
                 }
                 ?>
               </div>
-              <div id="show-list-db-current" style="width: 73%; float: left">
+              <div id="show-list-db-current">
                 <fieldset>
                   <legend><i>List databases</i></legend>
                   <form action="" method="POST">
@@ -369,7 +579,7 @@ if (isset($_POST['exit-server-btn'])) {
               </div>
             </div>
         </div>
-        <div id="browse-box" style="width:100%; float: left<?php if($_SESSION['table'] == null) echo '; display: none'; ?>">
+        <div id="browse-box" style="<?php if($_SESSION['table'] == null) echo '; display: none'; ?>">
           <h4>Browsing rows</h4><hr>
           <fieldset>
             <legend>Rows</legend>
@@ -411,7 +621,7 @@ if (isset($_POST['exit-server-btn'])) {
             ?>
           </fieldset>
         </div>
-        <div id="structure-box" style="width:100%; float: left<?php if(($_SESSION['database'] != null) && ($_SESSION['table'] == null)) {echo '';} else if(($_SESSION['database'] != null) && ($_SESSION['table'] != null)) {echo '';} else {echo '; display: none';} ?>">
+        <div id="structure-box" style="<?php if(($_SESSION['database'] != null) && ($_SESSION['table'] == null)) {echo '';} else if(($_SESSION['database'] != null) && ($_SESSION['table'] != null)) {echo '';} else {echo '; display: none';} ?>">
           <h4>Table Structure</h4><hr>
           <fieldset>
             <legend>Structure</legend>
@@ -510,7 +720,7 @@ if (isset($_POST['exit-server-btn'])) {
             ?>
           </fieldset>
         </div>
-        <div id="sql-box" style="width: 100%; float: left; display: none">
+        <div id="sql-box" class="box-content">
             <h4>Run SQL query/queries <?php
               if ($_SESSION['database']) echo $_SESSION['database'];
               if ($_SESSION['table']) echo '.' . $_SESSION['table'];
@@ -529,7 +739,7 @@ if (isset($_POST['exit-server-btn'])) {
               </form>
             </fieldset>
         </div>
-        <div id="export-box" style="width: 100%; float: left; display: none">
+        <div id="export-box" class="box-content">
             <h4>Exporting databases from the current server</h4><hr>
             <fieldset>
               <legend>Export</legend>
@@ -540,7 +750,7 @@ if (isset($_POST['exit-server-btn'])) {
               </form>
             </fieldset>
         </div>
-        <div id="import-box" style="width: 100%; float: left; display: none">
+        <div id="import-box" class="box-content">
             <h4>Importing into the current server</h4><hr>
             <fieldset>
               <legend>Import</legend>
@@ -551,7 +761,7 @@ if (isset($_POST['exit-server-btn'])) {
               </form>
             </fieldset>
         </div>
-        <div id="update-box" style="width: 100%; float: left; display: none">
+        <div id="update-box" class="box-content">
             <h4>Update MySQLAdmin</h4><hr>
             <fieldset>
               <legend>Update</legend>
