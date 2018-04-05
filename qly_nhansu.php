@@ -49,32 +49,55 @@ mysql_select_db($db_name) or die("mysql can not find");
     <style media="screen">
         body {
             width: 99%;
-            height: 1000px;
+            height: 100%;
             background-color: rgba(85, 164, 246, 0.19);
         }
 
-        .banner {
-            width: 100%;
+        header {
             height: 50px;
             float: left;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            color: white;
+            text-align: center;
             background-color: rgb(29, 223, 72);
         }
 
-        .banner h2 {
+        footer {
+            height: 50px;
+            float: left;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: white;
+            text-align: center;
+            background-color: rgb(29, 223, 72);
+        }
+
+        header h2, h4 {
             color: white;
             margin: 15px 0 0 20px;
+        }
+
+        table {
+            float: left;
         }
 
         .wrapper {
             width: 100%;
             height: 100%;
             float: left;
+            margin-top: 40px;
         }
+
         .menu-left {
-            width: 20%;
-            height: 100%;
+            width: 100%;
+            height: 32px;
             float: left;
-            /* background-color: rgb(83, 96, 87); */
+            background-color: rgb(14, 69, 235);
         }
 
         .menu-bar {
@@ -92,6 +115,7 @@ mysql_select_db($db_name) or die("mysql can not find");
         .menu-bar ul li {
             border-bottom: 1px solid #666;
             font-weight: bold;
+            float: left;
             background-color: rgb(14, 69, 235);
         }
 
@@ -112,10 +136,11 @@ mysql_select_db($db_name) or die("mysql can not find");
         }
 
         .content-right {
-            width: 80%;
+            width: 100%;
             height: 100%;
             /* background-color: rgb(202, 232, 229); */
             float: left;
+            margin-bottom: 100px;
         }
 
         .content-right button {
@@ -139,15 +164,15 @@ mysql_select_db($db_name) or die("mysql can not find");
         }
 
         #them-nvien, #chinh-sua-nvien, #them-hinhanh-nvien, #chinh-sua-hinhanh-nvien, #chinh-sua-don-vi, #chinh-sua-chuc-vu table {
-            width: 46%;
+            width: 25%;
             float: left;
         }
     </style>
   </head>
   <body>
-    <div class="banner">
-        <h2>QUẢN LÝ NHÂN SỰ</h2>
-    </div>
+    <header>
+      <h2 style="float: center">QUẢN LÝ NHÂN SỰ</h2>
+    </header>
     <div class="wrapper">
       <div class="menu-left">
         <div class="menu-bar">
@@ -164,37 +189,30 @@ mysql_select_db($db_name) or die("mysql can not find");
           <fieldset id="trang-chu">
             <legend><h2>TRANG CHỦ</h2></legend>
             <fieldset>
-              <table border=1 style="text-align: center; width: 100%">
-                <thead>
-                  <tr>
-                    <th>MANV</th>
-                    <th>HÌNH ẢNH</th>
-                    <th>HỌ TÊN</th>
-                    <th>NGÀY SINH</th>
-                    <th>GIỚI TÍNH</th>
-                  </tr>
-                </thead>
-                <tbody>
                   <?php
                     $sql_qry_list_nvien = "SELECT * FROM loc_thuc_nhanvien a, loc_thuc_donvi b, loc_thuc_chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ltweb
                     $qry_list_nvien = mysql_query($sql_qry_list_nvien);
                     while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
+                      echo '<table border=1 style="text-align: center; margin: 5px 5px 5px 5px">';
+                      echo "<tbody>";
+                      echo "<tr>";
+                      echo "<td>HÌNH ẢNH NHÂN VIÊN</td>";
+                      echo "</tr>";
+                      echo "<tr>";
+                      echo "<td>{$row_list_nvien['hoten']}</td>";
+                      echo "</tr>";
                       echo "<tr>";
                       echo "<td>{$row_list_nvien['manv']}</td>";
-                      echo "<td>{$row_list_nvien['hinhanh']}</td>";
-                      echo "<td>{$row_list_nvien['hoten']}</td>";
-                      echo "<td>{$row_list_nvien['namsinh']}</td>";
-                      echo "<td>{$row_list_nvien['gioitinh']}</td>";
                       echo "</tr>";
+                      echo "</tbody>";
+                      echo "</table>";
                     }
                   ?>
-                </tbody>
-              </table>
             </fieldset>
           </fieldset>
           <fieldset id="qly-nhan-vien">
             <legend><h2>NHÂN VIÊN</h2></legend>
-            <fieldset>
+            <div>
               <legend>Quản lý nhân viên</legend>
               <form action="" method="post">
                 <p>
@@ -204,156 +222,159 @@ mysql_select_db($db_name) or die("mysql can not find");
                   <!-- Thuchanh_5 -->
                   <button type="submit" name="delete-nvien">Xóa nhân viên</button>
                 </p>
-                <!-- Thuchanh_4 -->
-                <fieldset id="them-nvien">
-                  <legend>THÊM MỚI NHÂN VIÊN</legend>
-                  <form action="" method="post">
-                    <table border="1">
-                      <tr>
-                        <td><strong>MANV</strong></td>
-                        <td><input type="text" name="manv" placeholder="Nhập mã số nhân viên..." /></td>
-                      </tr>
-                      <tr>
-                        <td><strong>HỌ TÊN</strong></td>
-                        <td><input type="text" name="hoten" placeholder="Nhập họ tên nhân viên..." /></td>
-                      </tr>
-                      <tr>
-                        <td><strong>NGÀY SINH</strong></td>
-                        <td><input type="date" name="namsinh" value="<?php echo date('Y-m-d', time());?>" placeholder="Nhập họ tên nhân viên..." /></td>
-                      </tr>
-                      <tr>
-                        <td><strong>GIỚI TÍNH</strong></td>
-                        <td>
-                          Nam <input type="radio" name="gioitinh" value="Nam" checked/>
-                          Nữ <input type="radio" name="gioitinh" value="Nu" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>CHỨC VỤ</strong></td>
-                        <td>
-                          <select name="chucvu">
-                            <?php
-                            $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
-                            $result_select_cv = mysql_query($sql_select_cv);
-                            while ($row_cvu = mysql_fetch_array($result_select_cv)) {
-                              echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
+                <div style="width: 100%">
+                  <!-- Thuchanh_4 -->
+                  <fieldset id="them-nvien">
+                    <legend>THÊM MỚI NHÂN VIÊN</legend>
+                    <form action="" method="post">
+                      <table border="1">
+                        <tr>
+                          <td><strong>MANV</strong></td>
+                          <td><input type="text" name="manv" placeholder="Nhập mã số nhân viên..." /></td>
+                        </tr>
+                        <tr>
+                          <td><strong>HỌ TÊN</strong></td>
+                          <td><input type="text" name="hoten" placeholder="Nhập họ tên nhân viên..." /></td>
+                        </tr>
+                        <tr>
+                          <td><strong>NGÀY SINH</strong></td>
+                          <td><input type="date" name="namsinh" value="<?php echo date('Y-m-d', time());?>" placeholder="Nhập họ tên nhân viên..." /></td>
+                        </tr>
+                        <tr>
+                          <td><strong>GIỚI TÍNH</strong></td>
+                          <td>
+                            Nam <input type="radio" name="gioitinh" value="Nam" checked/>
+                            Nữ <input type="radio" name="gioitinh" value="Nu" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><strong>CHỨC VỤ</strong></td>
+                          <td>
+                            <select name="chucvu">
+                              <?php
+                              $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
+                              $result_select_cv = mysql_query($sql_select_cv);
+                              while ($row_cvu = mysql_fetch_array($result_select_cv)) {
+                                echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
+                              }
+                              ?>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><strong>ĐƠN VỊ</strong></td>
+                          <td>
+                            <select name="donvi">
+                              <?php
+                              $sql_select_cv = "SELECT * FROM loc_thuc_donvi";
+                              $result_select_cv = mysql_query($sql_select_cv);
+                              while ($row_cvu = mysql_fetch_array($result_select_cv)) {
+                                echo '<option value="'.$row_cvu['madv'].'">'.$row_cvu['donvi'].'</option>';
+                              }
+                              ?>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><strong>LƯƠNG (nghìn đồng)</strong></td>
+                          <td><input type="number" min="1000" name="luong" placeholder="Nhập lương nhân viên..." /></td>
+                        </tr>
+                      </table>
+                      <input type="submit" name="sua-nvien" value="Lưu thay đổi">
+                    </form>
+                  </fieldset>
+                  <!-- Thuchanh_5 -->
+                  <fieldset id="chinh-sua-nvien">
+                    <legend>CHỈNH SỬA NHÂN VIÊN</legend>
+                    <form action="" method="post">
+                      <table border="1">
+                        <tr>
+                          <td><strong>MANV</strong></td>
+                          <td><input type="text" name="manv" id="manv" value="" disabled /></td>
+                        </tr>
+                        <tr>
+                          <td><strong>HỌ TÊN</strong></td>
+                          <td><input type="text" name="hoten" id="hoten" placeholder="Nhập họ tên nhân viên..." /></td>
+                        </tr>
+                        <tr>
+                          <td><strong>NGÀY SINH</strong></td>
+                          <td><input type="date" name="namsinh" value="<?php echo date('Y-m-d', time());?>" placeholder="Nhập họ tên nhân viên..." /></td>
+                        </tr>
+                        <tr>
+                          <td><strong>GIỚI TÍNH</strong></td>
+                          <td>
+                            Nam <input type="radio" name="gioitinh" value="Nam" checked/>
+                            Nữ <input type="radio" name="gioitinh" value="Nu" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><strong>CHỨC VỤ</strong></td>
+                          <td>
+                            <select name="chucvu">
+                              <?php
+                              $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
+                              $result_select_cv = mysql_query($sql_select_cv);
+                              while ($row_cvu = mysql_fetch_array($result_select_cv)) {
+                                echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
+                              }
+                              ?>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><strong>ĐƠN VỊ</strong></td>
+                          <td>
+                            <select name="donvi">
+                              <?php
+                              $sql_select_dv = "SELECT * FROM loc_thuc_donvi";
+                              $result_select_dv = mysql_query($sql_select_dv);
+                              while ($row_dvi = mysql_fetch_array($result_select_dv)) {
+                                echo '<option value="'.$row_dvi['madv'].'">'.$row_dvi['donvi'].'</option>';
+                              }
+                              ?>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><strong>LƯƠNG (nghìn đồng)</strong></td>
+                          <td><input type="number" min="1000" name="luong" id="luong" placeholder="Nhập lương nhân viên..." /></td>
+                        </tr>
+                      </table>
+                      <input type="submit" name="sua-nvien" value="Lưu thay đổi">
+                    </form>
+                  </fieldset>
+                  <fieldset id="them-hinhanh-nvien">
+                    <legend>THÊM MỚI HÌNH ẢNH NHÂN VIÊN</legend>
+                    <form action="" method="post" enctype="multipart/form-data">
+                      <p>Nhân viên:
+                        <select name="manv">
+                          <?php
+                            $sql_select_nv = "SELECT * FROM loc_thuc_nhanvien";
+                            $result_select_nv = mysql_query($sql_select_nv);
+                            while ($row_nvien = mysql_fetch_array($result_select_nv)) {
+                              echo '<option value="'.$row_nvien['manv'].'">'.$row_nvien['hoten'].'</option>';
                             }
-                            ?>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>ĐƠN VỊ</strong></td>
-                        <td>
-                          <select name="donvi">
-                            <?php
-                            $sql_select_cv = "SELECT * FROM loc_thuc_donvi";
-                            $result_select_cv = mysql_query($sql_select_cv);
-                            while ($row_cvu = mysql_fetch_array($result_select_cv)) {
-                              echo '<option value="'.$row_cvu['madv'].'">'.$row_cvu['donvi'].'</option>';
-                            }
-                            ?>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>LƯƠNG (nghìn đồng)</strong></td>
-                        <td><input type="number" min="1000" name="luong" placeholder="Nhập lương nhân viên..." /></td>
-                      </tr>
-                    </table>
-                    <input type="submit" name="sua-nvien" value="Lưu thay đổi">
-                  </form>
-                </fieldset>
-                <!-- Thuchanh_5 -->
-                <fieldset id="chinh-sua-nvien">
-                  <legend>CHỈNH SỬA NHÂN VIÊN</legend>
-                  <form action="" method="post">
-                    <table border="1">
-                      <tr>
-                        <td><strong>MANV</strong></td>
-                        <td><input type="text" name="manv" id="manv" value="" disabled /></td>
-                      </tr>
-                      <tr>
-                        <td><strong>HỌ TÊN</strong></td>
-                        <td><input type="text" name="hoten" id="hoten" placeholder="Nhập họ tên nhân viên..." /></td>
-                      </tr>
-                      <tr>
-                        <td><strong>NGÀY SINH</strong></td>
-                        <td><input type="date" name="namsinh" value="<?php echo date('Y-m-d', time());?>" placeholder="Nhập họ tên nhân viên..." /></td>
-                      </tr>
-                      <tr>
-                        <td><strong>GIỚI TÍNH</strong></td>
-                        <td>
-                          Nam <input type="radio" name="gioitinh" value="Nam" checked/>
-                          Nữ <input type="radio" name="gioitinh" value="Nu" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>CHỨC VỤ</strong></td>
-                        <td>
-                          <select name="chucvu">
-                            <?php
-                            $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
-                            $result_select_cv = mysql_query($sql_select_cv);
-                            while ($row_cvu = mysql_fetch_array($result_select_cv)) {
-                              echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
-                            }
-                            ?>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>ĐƠN VỊ</strong></td>
-                        <td>
-                          <select name="donvi">
-                            <?php
-                            $sql_select_dv = "SELECT * FROM loc_thuc_donvi";
-                            $result_select_dv = mysql_query($sql_select_dv);
-                            while ($row_dvi = mysql_fetch_array($result_select_dv)) {
-                              echo '<option value="'.$row_dvi['madv'].'">'.$row_dvi['donvi'].'</option>';
-                            }
-                            ?>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>LƯƠNG (nghìn đồng)</strong></td>
-                        <td><input type="number" min="1000" name="luong" id="luong" placeholder="Nhập lương nhân viên..." /></td>
-                      </tr>
-                    </table>
-                    <input type="submit" name="sua-nvien" value="Lưu thay đổi">
-                  </form>
-                </fieldset>
-                <fieldset id="them-hinhanh-nvien">
-                  <legend>THÊM MỚI HÌNH ẢNH NHÂN VIÊN</legend>
-                  <form action="" method="post" enctype="multipart/form-data">
-                    <p>Nhân viên:
-                      <select name="manv">
-                        <?php
-                          $sql_select_nv = "SELECT * FROM loc_thuc_nhanvien";
-                          $result_select_nv = mysql_query($sql_select_nv);
-                          while ($row_nvien = mysql_fetch_array($result_select_nv)) {
-                            echo '<option value="'.$row_nvien['manv'].'">'.$row_nvien['hoten'].'</option>';
-                          }
-                        ?>
-                      </select>
-                    </p>
-                    <input type="file" name="img_nv" />
-                    <input type="submit" name="update_img_nv" value="Thêm mới" />
-                  </form>
-                </fieldset>
-                <fieldset id="chinh-sua-hinhanh-nvien">
-                  <legend>CHỈNH SỬA HÌNH ẢNH NHÂN VIÊN</legend>
-                  <form action="" method="post" enctype="multipart/form-data">
-                    <p>
-                      <input type="text" name="manv" id="manv_ha" value="" disabled/>
-                      <input type="text" id="hoten_ha" value="" disabled/>
-                    </p>
-                    <input type="file" name="img_nv" />
-                    <input type="submit" name="update_img_nv" value="Cập nhật" />
-                  </form>
-                </fieldset>
-                <fieldset>
+                          ?>
+                        </select>
+                      </p>
+                      <input type="file" name="img_nv" />
+                      <input type="submit" name="update_img_nv" value="Thêm mới" />
+                    </form>
+                  </fieldset>
+                  <fieldset id="chinh-sua-hinhanh-nvien">
+                    <legend>CHỈNH SỬA HÌNH ẢNH NHÂN VIÊN</legend>
+                    <form action="" method="post" enctype="multipart/form-data">
+                      <p>
+                        <input type="text" name="manv" id="manv_ha" value="" disabled/>
+                        <input type="text" id="hoten_ha" value="" disabled/>
+                      </p>
+                      <input type="file" name="img_nv" />
+                      <input type="submit" name="update_img_nv" value="Cập nhật" />
+                    </form>
+                  </fieldset>
+                </div>
+                <hr style="width: 100%">
+                <div style="width: 100%">
                   <table border=1 style="text-align: center; width: 100%">
                     <thead>
                       <tr>
@@ -394,9 +415,9 @@ mysql_select_db($db_name) or die("mysql can not find");
                       ?>
                     </tbody>
                   </table>
-                </fieldset>
+                </div>
               </form>
-            </fieldset>
+            </div>
           </fieldset>
           <fieldset id="qly-don-vi">
             <legend><h2>PHÒNG BAN/ĐƠN VỊ</h2></legend>
@@ -471,6 +492,9 @@ mysql_select_db($db_name) or die("mysql can not find");
         </div>
       </div>
     </div>
+    <footer>
+      <h4 style="float: center">VĂN LỘC B1400703 - NGUYÊN THỨC B1400731  | CT428 - LẬP TRÌNH WEB | PGS.TS ĐỖ THANH NGHỊ</h4>
+    </footer>
   </body>
 </html>
 
