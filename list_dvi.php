@@ -28,8 +28,7 @@
         </thead>
         <tbody>
           <?php
-            $sql_qry_list_nvien = "SELECT * FROM donvi"; // Ampps
-            // $sql_qry_list_nvien = "SELECT * FROM loc_thuc_donvi"; // Ltweb
+            $sql_qry_list_nvien = "SELECT * FROM loc_thuc_donvi"; // Ltweb
             $qry_list_nvien = mysql_query($sql_qry_list_nvien);
             while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
               echo "<tr>";
@@ -46,8 +45,7 @@
 
 <?php
 if(isset($_POST['add_dvi'])) {
-  $sql_insert_cvu = "INSERT INTO donvi VALUES ('{$_POST['madv']}', '{$_POST['dvi']}')"; // Ampps
-  // $sql_insert_cvu = "INSERT INTO loc_thuc_donvi VALUES ('{$_POST['madv']}', '{$_POST['dvi']}')"; // Ltweb
+  $sql_insert_cvu = "INSERT INTO loc_thuc_donvi VALUES ('{$_POST['madv']}', '{$_POST['dvi']}')"; // Ltweb
   $qry_insert_cvu = mysql_query($sql_insert_cvu);
 
   if ($qry_insert_cvu) echo "<script>alert('Thêm mới thành công!')</script>";

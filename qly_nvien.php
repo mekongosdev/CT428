@@ -21,8 +21,7 @@
       </thead>
       <tbody>
         <?php
-          $sql_qry_list_nvien = "SELECT * FROM nhanvien a, donvi b, chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ampps
-          // $sql_qry_list_nvien = "SELECT * FROM loc_thuc_nhanvien a, loc_thuc_donvi b, loc_thuc_chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ltweb
+          $sql_qry_list_nvien = "SELECT * FROM loc_thuc_nhanvien a, loc_thuc_donvi b, loc_thuc_chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ltweb
           $qry_list_nvien = mysql_query($sql_qry_list_nvien);
           while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
             echo "<tr>";

@@ -10,5 +10,6 @@ $db_name = "ltweb"; // Ampps
 // $db_name = "db_c4"; // Ltweb
 $conn = mysql_connect($db_host,$db_user,$db_pass) or die(mysql_error());
 mysql_set_charset('utf8');
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 mysql_select_db($db_name) or die("mysql can not find");
 ?>
