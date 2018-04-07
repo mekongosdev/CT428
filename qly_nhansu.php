@@ -20,15 +20,20 @@ mysql_select_db($db_name) or die("mysql can not find");
     <!-- <meta name="Content-type" content="image/jpeg"> -->
     <title>Quản lý nhân sự</title>
     <script type="text/javascript">
-      function showStuff(id, tbl, prop, value) { //, prop, value
-        document.getElementById(id).style.display = 'block';
-        for (i=0; i<prop.length; i++) {
-          document.getElementById(prop[i]).value = value[i];
-        }
+      function showStuff(id, prop, value) {
+        // list table
+        var tbl = ['trang-chu','qly-nhan-vien','qly-don-vi','qly-chuc-vu','them-nvien','them-hinhanh-nvien','chinh-sua-nvien','chinh-sua-hinhanh-nvien'];
         // hide the table
         for (i=0; i<tbl.length; i++) {
           document.getElementById(tbl[i]).style.display = 'none';
         }
+        // show the table by id
+        document.getElementById(id).style.display = 'block';
+        // parameter transmission for property
+        for (i=0; i<prop.length; i++) {
+          document.getElementById(prop[i]).value = value[i];
+        }
+
       }
 
       function toggle(source,name) {
@@ -183,10 +188,10 @@ mysql_select_db($db_name) or die("mysql can not find");
       <div class="menu-left">
         <div class="menu-bar">
           <ul>
-            <li><a onclick="showStuff('trang-chu', ['qly-nhan-vien','qly-don-vi','qly-chuc-vu', 'them-nvien', 'them-hinhanh-nvien', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Trang chủ</a></li>
-            <li><a onclick="showStuff('qly-nhan-vien', ['trang-chu', 'qly-don-vi','qly-chuc-vu', 'them-nvien', 'them-hinhanh-nvien', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Quản lý nhân viên</a></li>
-            <li><a onclick="showStuff('qly-don-vi', ['qly-nhan-vien', 'trang-chu','qly-chuc-vu', 'them-nvien', 'them-hinhanh-nvien', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Quản lý đơn vị</a></li>
-            <li><a onclick="showStuff('qly-chuc-vu', ['qly-nhan-vien', 'qly-don-vi','trang-chu', 'them-nvien', 'them-hinhanh-nvien', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Quản lý chức vụ</a></li>
+            <li><a onclick="showStuff('trang-chu',[],[]); return false;">Trang chủ</a></li>
+            <li><a onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quản lý nhân viên</a></li>
+            <li><a onclick="showStuff('qly-don-vi',[],[]); return false;">Quản lý đơn vị</a></li>
+            <li><a onclick="showStuff('qly-chuc-vu',[],[]); return false;">Quản lý chức vụ</a></li>
             <li><a onClick="window.location.reload()">Tải lại trang</a></li>
           </ul>
         </div>
@@ -224,8 +229,8 @@ mysql_select_db($db_name) or die("mysql can not find");
               <form method="post">
                 <p>
                   <!-- Thuchanh_4 -->
-                  <button type="button" onclick="showStuff('them-nvien', ['qly-nhan-vien', 'qly-don-vi','trang-chu', 'qly-chuc-vu', 'them-hinhanh-nvien', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Thêm mới nhân viên</button>
-                  <button type="button" onclick="showStuff('them-hinhanh-nvien', ['qly-nhan-vien', 'qly-don-vi','trang-chu', 'them-nvien', 'qly-chuc-vu', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Thêm mới hình ảnh nhân viên</button>
+                  <button type="button" onclick="showStuff('them-nvien',[],[]); return false;">Thêm mới nhân viên</button>
+                  <button type="button" onclick="showStuff('them-hinhanh-nvien',[],[]); return false;">Thêm mới hình ảnh nhân viên</button>
                   <!-- Thuchanh_5 -->
                   <button type="submit" name="delete-nvien">Xóa nhân viên</button>
                 </p>
@@ -264,8 +269,8 @@ mysql_select_db($db_name) or die("mysql can not find");
                           echo "<td>{$row_list_nvien['luong']}</td>";
                           echo '<td>';
                             // Thuchanh_5
-                            echo '<button type="button" onclick="showStuff('."'chinh-sua-nvien', ['qly-nhan-vien', 'qly-don-vi','trang-chu', 'them-nvien', 'qly-chuc-vu', 'them-hinhanh-nvien', 'chinh-sua-hinhanh-nvien'], ['manv','hoten','luong'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['luong']."']".'); return false;">Thông tin</button>';
-                            echo '<button type="button" onclick="showStuff('."'chinh-sua-hinhanh-nvien', ['qly-nhan-vien', 'qly-don-vi','trang-chu', 'them-nvien', 'qly-chuc-vu', 'chinh-sua-nvien', 'them-hinhanh-nvien'], ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">Hình ảnh</button>';
+                            echo '<button type="button" onclick="showStuff('."'chinh-sua-nvien', ['manv','hoten','luong'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['luong']."']".'); return false;">Thông tin</button>';
+                            echo '<button type="button" onclick="showStuff('."'chinh-sua-hinhanh-nvien', ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">Hình ảnh</button>';
                           echo '</td>';
                           echo "</tr>";
                         }
@@ -279,7 +284,7 @@ mysql_select_db($db_name) or die("mysql can not find");
           <!-- Thuchanh_4 -->
           <fieldset id="them-nvien">
             <legend><h2>THÊM MỚI NHÂN VIÊN</h2></legend>
-            <button onclick="showStuff('qly-nhan-vien', ['trang-chu', 'qly-don-vi','qly-chuc-vu', 'them-nvien', 'them-hinhanh-nvien', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Quay lại</button>
+            <button onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quay lại</button>
             <hr>
             <form method="post">
               <table border="1" style="width: 100%">
@@ -342,7 +347,7 @@ mysql_select_db($db_name) or die("mysql can not find");
           <!-- Thuchanh_5 -->
           <fieldset id="chinh-sua-nvien">
             <legend><h2>CHỈNH SỬA NHÂN VIÊN</h2></legend>
-            <button onclick="showStuff('qly-nhan-vien', ['trang-chu', 'qly-don-vi','qly-chuc-vu', 'them-nvien', 'them-hinhanh-nvien', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Quay lại</button>
+            <button onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quay lại</button>
             <hr>
             <form method="post">
               <table border="1" style="width: 100%">
@@ -404,7 +409,7 @@ mysql_select_db($db_name) or die("mysql can not find");
           </fieldset>
           <fieldset id="them-hinhanh-nvien">
             <legend><h2>THÊM MỚI HÌNH ẢNH NHÂN VIÊN</h2></legend>
-            <button onclick="showStuff('qly-nhan-vien', ['trang-chu', 'qly-don-vi','qly-chuc-vu', 'them-nvien', 'them-hinhanh-nvien', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Quay lại</button>
+            <button onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quay lại</button>
             <hr>
             <form method="post" enctype="multipart/form-data">
               <p>Nhân viên:
@@ -424,7 +429,7 @@ mysql_select_db($db_name) or die("mysql can not find");
           </fieldset>
           <fieldset id="chinh-sua-hinhanh-nvien">
             <legend><h2>CHỈNH SỬA HÌNH ẢNH NHÂN VIÊN</h2></legend>
-            <button onclick="showStuff('qly-nhan-vien', ['trang-chu', 'qly-don-vi','qly-chuc-vu', 'them-nvien', 'them-hinhanh-nvien', 'chinh-sua-nvien', 'chinh-sua-hinhanh-nvien'],[],[]); return false;">Quay lại</button>
+            <button onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quay lại</button>
             <hr>
             <form method="post" enctype="multipart/form-data">
               <p>Thay đổi hình ảnh cho nhân viên:
