@@ -208,8 +208,12 @@ if (isset($_POST['exit-server-btn'])) {
               y.style.display = "none";
           } else {
               x.style.display = "none";
-              y.style.display = "block";              
+              y.style.display = "block";
           }
+      }
+
+      function showSQLvalue(primary, value) {
+          document.getElementById(primary).value = value;
       }
     </script>
     <style media="screen">
@@ -630,7 +634,7 @@ if (isset($_POST['exit-server-btn'])) {
                 $txt_query = "DESCRIBE ".$_SESSION['table'];
                 $query_tbl_info = mysql_query($txt_query);
                 $tbl_nums_field = mysql_num_rows($query_tbl_info);
-                $query_tbl_row = mysql_query($txt_query);
+                // $query_tbl_row = mysql_query($txt_query);
 
                 echo '<form action="" method="POST">
                 <table border=1 style="width:99%; margin-left:2px; text-align:center">
@@ -728,13 +732,13 @@ if (isset($_POST['exit-server-btn'])) {
             <fieldset>
               <legend>Run SQL query/queries</legend>
               <form action="" method="POST">
-                <textarea id="sql_box" name="sql_box" rows="8" style="width: 99%" value="" placeholder="...coding"></textarea>
-                <button type="button" id="select-all-sql" style="margin-left: 5px; float: left">SELECT *</button>
-                <button type="button" id="select-sql" style="margin-left: 5px; float: left">SELECT</button>
-                <button type="button" id="insert-sql" style="margin-left: 5px; float: left">INSERT</button>
-                <button type="button" id="update-sql" style="margin-left: 5px; float: left">UPDATE</button>
-                <button type="button" id="delete-sql" style="margin-left: 5px; float: left">DELETE</button>
-                <button type="button" id="clear-sql" style="margin-left: 5px; float: left">Clear</button>
+                <textarea id="sql_box" name="sql_box" rows="10" style="width: 99%; float: left" value="" placeholder="...coding"></textarea>
+                <button type="button" id="select-all-sql" style="margin-left: 5px; float: left" onclick="showSQLvalue('sql_box','SELECT * FROM <?php if ($_SESSION['table'] == null) echo 'table_name'; else echo $_SESSION['table']; ?>'); return false;">SELECT *</button>
+                <button type="button" id="select-sql" style="margin-left: 5px; float: left" onclick="showSQLvalue('sql_box','SELECT field_name FROM <?php if ($_SESSION['table'] == null) echo 'table_name'; else echo $_SESSION['table']; ?>'); return false;">SELECT</button>
+                <button type="button" id="insert-sql" style="margin-left: 5px; float: left" onclick="showSQLvalue('sql_box','INSERT INTO <?php if ($_SESSION['table'] == null) echo 'table_name'; else echo $_SESSION['table']; ?>(field_name) VALUES ([value])'); return false;">INSERT</button>
+                <button type="button" id="update-sql" style="margin-left: 5px; float: left" onclick="showSQLvalue('sql_box','UPDATE <?php if ($_SESSION['table'] == null) echo 'table_name'; else echo $_SESSION['table']; ?> SET field_name=[value] WHERE field_name=[value]'); return false;">UPDATE</button>
+                <button type="button" id="delete-sql" style="margin-left: 5px; float: left" onclick="showSQLvalue('sql_box','DELETE FROM <?php if ($_SESSION['table'] == null) echo 'table_name'; else echo $_SESSION['table']; ?> WHERE field_name=[value]'); return false;">DELETE</button>
+                <button type="button" id="clear-sql" style="margin-left: 5px; float: left" onclick="showSQLvalue('sql_box',''); return false;">Clear</button>
                 <button type="submit" name="sql_qry" style="margin-left: 5px; float: right">Go</button>
               </form>
             </fieldset>
