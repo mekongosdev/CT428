@@ -12,28 +12,46 @@ $conn = mysql_connect($db_host,$db_user,$db_pass) or die(mysql_error());
 mysql_set_charset('utf8');
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 mysql_select_db($db_name) or die("mysql can not find");
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="vi" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <!-- <meta name="Content-type" content="image/jpeg"> -->
     <title>Quản lý nhân sự</title>
     <script type="text/javascript">
-      function showStuff(id, prop, value) {
-        // list table
-        var tbl = ['trang-chu','qly-nhan-vien','qly-don-vi','qly-chuc-vu','them-nvien','them-hinhanh-nvien','chinh-sua-nvien','chinh-sua-hinhanh-nvien'];
-        // hide the table
-        for (i=0; i<tbl.length; i++) {
-          document.getElementById(tbl[i]).style.display = 'none';
+      // list fieldset id
+      var fieldsetId = ['trang-chu','qly-nhan-vien','qly-don-vi','qly-chuc-vu','them-nvien','them-hinhanh-nvien','chinh-sua-nvien','chinh-sua-hinhanh-nvien'];
+
+      function showPage(id, prop, value) {
+        for (i=0; i<fieldsetId.length; i++) {
+          document.getElementById(fieldsetId[i]).style.display = 'none';
         }
         // show the table by id
         document.getElementById(id).style.display = 'block';
+        // storage session page
+        sessionStorage.setItem('page', id);
         // parameter transmission for property
         for (i=0; i<prop.length; i++) {
-          document.getElementById(prop[i]).value = value[i];
+          if (value[i] === 'Nam') {
+            document.getElementById('nam').checked = true;
+            document.getElementById('nu').checked = false;
+          } else if (value[i] === 'Nu') {
+            document.getElementById('nam').checked = false;
+            document.getElementById('nu').checked = true;
+          } else document.getElementById(prop[i]).value = value[i];
         }
+      }
 
+      function showFieldsetSessions() {
+        // hide the table
+        for (i=0; i<fieldsetId.length; i++) {
+          document.getElementById(fieldsetId[i]).style.display = 'none';
+        }
+        // show the table by id
+        if (sessionStorage.getItem('page') === null) {
+          document.getElementById('trang-chu').style.display = 'block';
+        } else document.getElementById(sessionStorage.getItem('page')).style.display = 'block';
       }
 
       function toggle(source,name) {
@@ -54,15 +72,9 @@ mysql_select_db($db_name) or die("mysql can not find");
               x.style.display = "none";
           }
       }
-
-      function toggle(source,name) {
-        checkboxes = document.getElementsByName(name);
-        for(var i=0, n=checkboxes.length;i<n;i++) {
-          checkboxes[i].checked = source.checked;
-        }
-      }
     </script>
     <style media="screen">
+      /* CSS for HTML tag */
         body {
             width: 99%;
             height: 100%;
@@ -102,37 +114,36 @@ mysql_select_db($db_name) or die("mysql can not find");
             float: left;
         }
 
-        .wrapper {
-            width: 100%;
-            height: 100%;
-            float: left;
-            margin-top: 40px;
+        fieldset {
+            border: 0px;
         }
 
-        .menu-left {
+        input {
+            background-color: white;
+            color: black;
+            padding: 5px;
+            border: 1px solid black;
+            border-radius: 10px;
+        }
+
+      /* CSS for HTML class */
+        .menu-bar {
             width: 100%;
             height: 32px;
             float: left;
-            background-color: rgb(14, 69, 235);
-        }
-
-        .menu-bar {
-            width: 100%;
-            /* background-color: rgb(115, 124, 109); */
+            background-color: rgb(29, 223, 72);
         }
 
         .menu-bar ul{
           	list-style: none;
-          	border-top: 1px solid #666;
             margin: 0px 0 0 0px;
             padding: 0px 0 0 0px;
         }
 
         .menu-bar ul li {
-            border-bottom: 1px solid #666;
             font-weight: bold;
             float: left;
-            background-color: rgb(14, 69, 235);
+            background-color: rgb(29, 223, 72);
         }
 
         .menu-bar ul a, ul a:visited {
@@ -142,7 +153,7 @@ mysql_select_db($db_name) or die("mysql can not find");
         }
 
         .menu-bar ul a:hover, ul a:active, ul a:focus {
-          	background-color: rgb(23, 13, 91);
+          	background-color: #4CAF50;
           	color: #FFF;
         }
 
@@ -151,26 +162,112 @@ mysql_select_db($db_name) or die("mysql can not find");
             color: white;
         }
 
-        .content-right {
+        .list-nvien {
+            width: 100%;
+            text-align: center;
+            float: left;
+        }
+
+        .list-nvien-detail {
+            width: 205px;
+            margin: 0 5px 10px 5px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            float: left;
+        }
+
+        .list-nvien-detail img {
+            width: 100%;
+            height: 220px;
+        }
+
+        .qly-nvien-tbl th, td {
+            border: 1px solid #ddd;
+        }
+
+        .qly-nvien-tbl th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .qly-nvien-tbl tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            background-color: white;
+            color: blue;
+            font-weight: bold;
+            padding: 5px 10px 5px 10px;
+            border: 1px solid blue;
+            border-radius: 10px;
+        }
+
+        .btn:hover {
+            background-color: blue;
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px 5px 10px;
+            border: 1px solid white;
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background-color: blue;
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px 5px 10px;
+            border: 1px solid white;
+            border-radius: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: white;
+            color: blue;
+            font-weight: bold;
+            padding: 5px 10px 5px 10px;
+            border: 1px solid blue;
+            border-radius: 10px;
+        }
+
+        .btn-danger {
+            background-color: red;
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px 5px 10px;
+            border: 1px solid white;
+            border-radius: 10px;
+        }
+
+        .btn-danger:hover {
+            background-color: white;
+            color: red;
+            font-weight: bold;
+            padding: 5px 10px 5px 10px;
+            border: 1px solid red;
+            border-radius: 10px;
+        }
+
+        .main-content {
             width: 100%;
             height: 100%;
-            /* background-color: rgb(202, 232, 229); */
+            float: left;
+            margin-top: 75px;
             float: left;
             margin-bottom: 100px;
         }
 
-        .content-right button {
+        .main-content button {
             margin-right: 5px;
+        }
+
+      /* CSS for HTML tag id */
+        #trang-chu, #qly-nhan-vien, #qly-don-vi, #qly-chuc-vu {
+            text-align: center;
         }
 
         #qly-nhan-vien, #qly-don-vi, #qly-chuc-vu {
             display: none;
-        }
-
-        .khung-nhin {
-            width: 100%;
-            height: 100%;
-            float: left;
         }
 
         #them-nvien, #chinh-sua-nvien, #them-hinhanh-nvien, #chinh-sua-hinhanh-nvien {
@@ -180,338 +277,371 @@ mysql_select_db($db_name) or die("mysql can not find");
         }
     </style>
   </head>
-  <body>
+  <body onload="showFieldsetSessions(); return false;">
     <header>
       <h2 style="float: center">QUẢN LÝ NHÂN SỰ</h2>
-    </header>
-    <div class="wrapper">
-      <div class="menu-left">
-        <div class="menu-bar">
-          <ul>
-            <li><a onclick="showStuff('trang-chu',[],[]); return false;">Trang chủ</a></li>
-            <li><a onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quản lý nhân viên</a></li>
-            <li><a onclick="showStuff('qly-don-vi',[],[]); return false;">Quản lý đơn vị</a></li>
-            <li><a onclick="showStuff('qly-chuc-vu',[],[]); return false;">Quản lý chức vụ</a></li>
-            <li><a onClick="window.location.reload()">Tải lại trang</a></li>
-          </ul>
-        </div>
+      <div class="menu-bar">
+        <ul>
+          <li style="margin-left: 15px;"><a onclick="showPage('trang-chu',[],[]); return false;">Trang chủ</a></li>
+          <li><a onclick="showPage('qly-nhan-vien',[],[]); return false;">Quản lý nhân viên</a></li>
+          <li><a onclick="showPage('qly-don-vi',[],[]); return false;">Quản lý đơn vị</a></li>
+          <li><a onclick="showPage('qly-chuc-vu',[],[]); return false;">Quản lý chức vụ</a></li>
+          <li style="margin-right: 10px; float: right;"><a onClick="window.location.reload()">Tải lại trang</a></li>
+        </ul>
       </div>
-      <div class="content-right">
-        <div class="khung-nhin">
-          <fieldset id="trang-chu">
-            <legend><h2>TRANG CHỦ</h2></legend>
-            <fieldset>
+    </header>
+    <div class="main-content">
+      <fieldset id="trang-chu">
+        <legend><h2>TRANG CHỦ</h2></legend>
+        <center>
+          <div class="list-nvien">
+          <?php
+            $sql_qry_list_nvien = "SELECT * FROM loc_thuc_nhanvien a, loc_thuc_donvi b, loc_thuc_chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ltweb
+            $qry_list_nvien = mysql_query($sql_qry_list_nvien);
+            while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
+              echo '<div class="list-nvien-detail">';
+              echo '<img src="data:image/jpeg;base64,'.base64_encode( $row_list_nvien['hinhanh'] ).'" alt="Hình ảnh nhân viên"/>';
+              echo "<br />";
+              echo "<b style='color: blue;'>{$row_list_nvien['hoten']}</b>";
+              echo "<br />";
+              $sql_qry_chucvu_of_nvien = "SELECT chucvu FROM loc_thuc_chucvu WHERE macv = '{$row_list_nvien['macv']}'";
+              $qry_chucvu_of_nvien = mysql_query($sql_qry_chucvu_of_nvien);
+              $chucvu = mysql_fetch_array($qry_chucvu_of_nvien);
+              echo $chucvu[0];
+              echo "<br />";
+              echo "<span style='color: rgb(176, 177, 177)'>{$row_list_nvien['manv']}</span>";
+              echo "<br />";
+              echo "</div>";
+            }
+          ?>
+          </div>
+        </center>
+      </fieldset>
+      <fieldset id="qly-nhan-vien">
+        <legend><h2>NHÂN VIÊN</h2></legend>
+        <div>
+          <!-- <legend>Quản lý nhân viên</legend> -->
+          <form method="post">
+            <p>
+              <!-- Thuchanh_4 -->
+              <button type="button" class="btn" onclick="showPage('them-nvien',[],[]); return false;">Thêm mới nhân viên</button>
+              <button type="button" class="btn" onclick="showPage('them-hinhanh-nvien',[],[]); return false;">Thêm mới hình ảnh nhân viên</button>
+              <!-- Thuchanh_5 -->
+              <button type="submit" class="btn-danger" name="delete-nvien">Xóa nhân viên</button>
+            </p>
+            <hr>
+            <div style="width: 100%">
+              <table class="qly-nvien-tbl" style="text-align: center; width: 100%">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" onClick="toggle(this,'manv[]')" /></th>
+                    <th>MANV</th>
+                    <th>HÌNH ẢNH</th>
+                    <th>HỌ TÊN</th>
+                    <th>NGÀY SINH</th>
+                    <th>GIỚI TÍNH</th>
+                    <th>ĐƠN VỊ</th>
+                    <th>CHỨC VỤ</th>
+                    <th>LƯƠNG<br />(nghìn đồng)</th>
+                    <th>CHỈNH SỬA</th>
+                  </tr>
+                </thead>
+                <tbody>
                   <?php
                     $sql_qry_list_nvien = "SELECT * FROM loc_thuc_nhanvien a, loc_thuc_donvi b, loc_thuc_chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ltweb
                     $qry_list_nvien = mysql_query($sql_qry_list_nvien);
                     while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
-                      echo '<table border=1 style="text-align: center; margin: 5px 5px 5px 5px">';
-                      echo "<tbody>";
                       echo "<tr>";
-                      echo "<td>HÌNH ẢNH NHÂN VIÊN</td>";
-                      echo "</tr>";
-                      echo "<tr>";
-                      echo "<td>{$row_list_nvien['hoten']}</td>";
-                      echo "</tr>";
-                      echo "<tr>";
+                      echo '<td><input type="checkbox" name="manv[]" value="'.$row_list_nvien['manv'].'"</td>';
                       echo "<td>{$row_list_nvien['manv']}</td>";
+                      echo '<td><img src="data:image/jpeg;base64,'.base64_encode( $row_list_nvien['hinhanh'] ).'" style="width: 100px; height: 150px" alt="Hình ảnh nhân viên"/></td>';
+                      echo "<td>{$row_list_nvien['hoten']}</td>";
+                      echo "<td>{$row_list_nvien['namsinh']}</td>";
+                      echo "<td>{$row_list_nvien['gioitinh']}</td>";
+                      echo "<td>{$row_list_nvien['donvi']}</td>";
+                      echo "<td>{$row_list_nvien['chucvu']}</td>";
+                      echo "<td>{$row_list_nvien['luong']}</td>";
+                      echo '<td>';
+                        // Thuchanh_5
+                        echo '<button style="margin: 5px 0 5px 0;" type="button" class="btn" onclick="showPage('."'chinh-sua-nvien', ['manv','hoten','namsinh','gioitinh','chucvu','donvi','luong'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['namsinh']."','".$row_list_nvien['gioitinh']."','".$row_list_nvien['macv']."','".$row_list_nvien['madv']."','".$row_list_nvien['luong']."']".'); return false;">Thông tin</button>';
+                        echo "<br />";
+                        echo '<button style="margin: 5px 0 5px 0;" type="button" class="btn" onclick="showPage('."'chinh-sua-hinhanh-nvien', ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">Hình ảnh</button>';
+                      echo '</td>';
                       echo "</tr>";
-                      echo "</tbody>";
-                      echo "</table>";
                     }
                   ?>
-            </fieldset>
-          </fieldset>
-          <fieldset id="qly-nhan-vien">
-            <legend><h2>NHÂN VIÊN</h2></legend>
-            <div>
-              <!-- <legend>Quản lý nhân viên</legend> -->
-              <form method="post">
-                <p>
-                  <!-- Thuchanh_4 -->
-                  <button type="button" onclick="showStuff('them-nvien',[],[]); return false;">Thêm mới nhân viên</button>
-                  <button type="button" onclick="showStuff('them-hinhanh-nvien',[],[]); return false;">Thêm mới hình ảnh nhân viên</button>
-                  <!-- Thuchanh_5 -->
-                  <button type="submit" name="delete-nvien">Xóa nhân viên</button>
-                </p>
-                <hr>
-                <div style="width: 100%">
-                  <table border=1 style="text-align: center; width: 100%">
-                    <thead>
-                      <tr>
-                        <th><input type="checkbox" onClick="toggle(this,'manv[]')" /></th>
-                        <th>MANV</th>
-                        <th>HÌNH ẢNH</th>
-                        <th>HỌ TÊN</th>
-                        <th>NGÀY SINH</th>
-                        <th>GIỚI TÍNH</th>
-                        <th>ĐƠN VỊ</th>
-                        <th>CHỨC VỤ</th>
-                        <th>LƯƠNG<br />(nghìn)</th>
-                        <th>CHỈNH SỬA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php
-                        $sql_qry_list_nvien = "SELECT * FROM loc_thuc_nhanvien a, loc_thuc_donvi b, loc_thuc_chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ltweb
-                        $qry_list_nvien = mysql_query($sql_qry_list_nvien);
-                        while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
-                          echo "<tr>";
-                          echo '<td><input type="checkbox" name="manv[]" value="'.$row_list_nvien['manv'].'"</td>';
-                          echo "<td>{$row_list_nvien['manv']}</td>";
-                          // header("Content-type: image/jpeg");
-                          echo "<td>{$row_list_nvien['hinhanh']}</td>";
-                          echo "<td>{$row_list_nvien['hoten']}</td>";
-                          echo "<td>{$row_list_nvien['namsinh']}</td>";
-                          echo "<td>{$row_list_nvien['gioitinh']}</td>";
-                          echo "<td>{$row_list_nvien['donvi']}</td>";
-                          echo "<td>{$row_list_nvien['chucvu']}</td>";
-                          echo "<td>{$row_list_nvien['luong']}</td>";
-                          echo '<td>';
-                            // Thuchanh_5
-                            echo '<button type="button" onclick="showStuff('."'chinh-sua-nvien', ['manv','hoten','luong'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['luong']."']".'); return false;">Thông tin</button>';
-                            echo '<button type="button" onclick="showStuff('."'chinh-sua-hinhanh-nvien', ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">Hình ảnh</button>';
-                          echo '</td>';
-                          echo "</tr>";
-                        }
-                      ?>
-                    </tbody>
-                  </table>
-                </div>
-              </form>
+                </tbody>
+              </table>
             </div>
-          </fieldset>
-          <!-- Thuchanh_4 -->
-          <fieldset id="them-nvien">
-            <legend><h2>THÊM MỚI NHÂN VIÊN</h2></legend>
-            <button onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quay lại</button>
-            <hr>
-            <form method="post">
-              <table border="1" style="width: 100%">
-                <tr>
-                  <td><strong>MANV</strong></td>
-                  <td><input type="text" name="manv" placeholder="Nhập mã số nhân viên..." required /></td>
-                </tr>
-                <tr>
-                  <td><strong>HỌ TÊN</strong></td>
-                  <td><input type="text" name="hoten" placeholder="Nhập họ tên nhân viên..." required /></td>
-                </tr>
-                <tr>
-                  <td><strong>NGÀY SINH</strong></td>
-                  <td><input type="date" name="namsinh" value="<?php echo date('Y-m-d', time());?>" placeholder="Nhập họ tên nhân viên..." /></td>
-                </tr>
-                <tr>
-                  <td><strong>GIỚI TÍNH</strong></td>
-                  <td>
-                    Nam <input type="radio" name="gioitinh" value="Nam" checked/>
-                    Nữ <input type="radio" name="gioitinh" value="Nu" />
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>CHỨC VỤ</strong></td>
-                  <td>
-                    <select name="chucvu">
-                      <?php
-                      $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
-                      $result_select_cv = mysql_query($sql_select_cv);
-                      while ($row_cvu = mysql_fetch_array($result_select_cv)) {
-                        echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
-                      }
-                      ?>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>ĐƠN VỊ</strong></td>
-                  <td>
-                    <select name="donvi">
-                      <?php
-                      $sql_select_cv = "SELECT * FROM loc_thuc_donvi";
-                      $result_select_cv = mysql_query($sql_select_cv);
-                      while ($row_cvu = mysql_fetch_array($result_select_cv)) {
-                        echo '<option value="'.$row_cvu['madv'].'">'.$row_cvu['donvi'].'</option>';
-                      }
-                      ?>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>LƯƠNG (nghìn đồng)</strong></td>
-                  <td><input type="number" min="1000" name="luong" placeholder="Nhập lương nhân viên..." required /></td>
-                </tr>
-              </table>
-              <hr>
-              <input type="submit" name="sua-nvien" value="Lưu thay đổi">
-            </form>
-          </fieldset>
-          <!-- Thuchanh_5 -->
-          <fieldset id="chinh-sua-nvien">
-            <legend><h2>CHỈNH SỬA NHÂN VIÊN</h2></legend>
-            <button onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quay lại</button>
-            <hr>
-            <form method="post">
-              <table border="1" style="width: 100%">
-                <tr>
-                  <td><strong>MANV</strong></td>
-                  <td><input type="text" name="manv" id="manv" value="" disabled /></td>
-                </tr>
-                <tr>
-                  <td><strong>HỌ TÊN</strong></td>
-                  <td><input type="text" name="hoten" id="hoten" placeholder="Nhập họ tên nhân viên..." required /></td>
-                </tr>
-                <tr>
-                  <td><strong>NGÀY SINH</strong></td>
-                  <td><input type="date" name="namsinh" value="<?php echo date('Y-m-d', time());?>" placeholder="Nhập họ tên nhân viên..." /></td>
-                </tr>
-                <tr>
-                  <td><strong>GIỚI TÍNH</strong></td>
-                  <td>
-                    Nam <input type="radio" name="gioitinh" value="Nam" checked/>
-                    Nữ <input type="radio" name="gioitinh" value="Nu" />
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>CHỨC VỤ</strong></td>
-                  <td>
-                    <select name="chucvu">
-                      <?php
-                      $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
-                      $result_select_cv = mysql_query($sql_select_cv);
-                      while ($row_cvu = mysql_fetch_array($result_select_cv)) {
-                        echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
-                      }
-                      ?>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>ĐƠN VỊ</strong></td>
-                  <td>
-                    <select name="donvi">
-                      <?php
-                      $sql_select_dv = "SELECT * FROM loc_thuc_donvi";
-                      $result_select_dv = mysql_query($sql_select_dv);
-                      while ($row_dvi = mysql_fetch_array($result_select_dv)) {
-                        echo '<option value="'.$row_dvi['madv'].'">'.$row_dvi['donvi'].'</option>';
-                      }
-                      ?>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>LƯƠNG (nghìn đồng)</strong></td>
-                  <td><input type="number" min="1000" name="luong" id="luong" placeholder="Nhập lương nhân viên..." required /></td>
-                </tr>
-              </table>
-              <hr>
-              <input type="submit" name="sua-nvien" value="Lưu thay đổi">
-            </form>
-          </fieldset>
-          <fieldset id="them-hinhanh-nvien">
-            <legend><h2>THÊM MỚI HÌNH ẢNH NHÂN VIÊN</h2></legend>
-            <button onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quay lại</button>
-            <hr>
-            <form method="post" enctype="multipart/form-data">
-              <p>Nhân viên:
-                <select name="manv">
+          </form>
+        </div>
+      </fieldset>
+      <!-- Thuchanh_4 -->
+      <fieldset id="them-nvien">
+        <legend><h2>THÊM MỚI NHÂN VIÊN</h2></legend>
+        <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
+        <hr>
+        <form method="post">
+          <table style="width: 100%">
+            <tr>
+              <td><strong>MANV</strong></td>
+              <td><input type="text" name="manv" value="<?php
+              // Tự động sinh mã nhân viên
+              $return_manv_end = mysql_fetch_array(mysql_query("SELECT manv FROM loc_thuc_nhanvien ORDER BY manv DESC "));
+              $manv_next = $return_manv_end[0] + 1;
+              if (($manv_next >= 100000) && ($manv_next >= 10000)) {
+                  echo $manv_next;
+              } else if ($manv_next >= 1000) {
+                  echo '0'.$manv_next;
+              } else if ($manv_next >= 100) {
+                  echo '00'.$manv_next;
+              } else if ($manv_next >= 10) {
+                  echo '000'.$manv_next;
+              } else if ($manv_next >= 1) {
+                  echo '0000'.$manv_next;
+              }
+              ?>" placeholder="Nhập mã số nhân viên..." required /></td>
+            </tr>
+            <tr>
+              <td><strong>HỌ TÊN</strong></td>
+              <td><input type="text" name="hoten" placeholder="Nhập họ tên nhân viên..." required /></td>
+            </tr>
+            <tr>
+              <td><strong>NGÀY SINH</strong></td>
+              <td><input type="date" name="namsinh" value="<?php echo date('Y-m-d', time());?>" placeholder="Nhập họ tên nhân viên..." /></td>
+            </tr>
+            <tr>
+              <td><strong>GIỚI TÍNH</strong></td>
+              <td>
+                Nam <input type="radio" name="gioitinh" value="Nam" checked/>
+                Nữ <input type="radio" name="gioitinh" value="Nu" />
+              </td>
+            </tr>
+            <tr>
+              <td><strong>CHỨC VỤ</strong></td>
+              <td>
+                <select name="chucvu">
                   <?php
-                    $sql_select_nv = "SELECT * FROM loc_thuc_nhanvien";
-                    $result_select_nv = mysql_query($sql_select_nv);
-                    while ($row_nvien = mysql_fetch_array($result_select_nv)) {
-                      echo '<option value="'.$row_nvien['manv'].'">'.$row_nvien['hoten'].'</option>';
-                    }
+                  $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
+                  $result_select_cv = mysql_query($sql_select_cv);
+                  while ($row_cvu = mysql_fetch_array($result_select_cv)) {
+                    echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
+                  }
                   ?>
                 </select>
-              </p>
-              <input type="file" name="img_nv" />
-              <input type="submit" name="upload_img_nv" value="Thêm mới" />
+              </td>
+            </tr>
+            <tr>
+              <td><strong>ĐƠN VỊ</strong></td>
+              <td>
+                <select name="donvi">
+                  <?php
+                  $sql_select_cv = "SELECT * FROM loc_thuc_donvi";
+                  $result_select_cv = mysql_query($sql_select_cv);
+                  while ($row_cvu = mysql_fetch_array($result_select_cv)) {
+                    echo '<option value="'.$row_cvu['madv'].'">'.$row_cvu['donvi'].'</option>';
+                  }
+                  ?>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>LƯƠNG</strong></td>
+              <td><input type="number" min="1000" name="luong" placeholder="Nhập lương nhân viên..." required /> (nghìn đồng)</td>
+            </tr>
+          </table>
+          <hr>
+          <button type="submit" class="btn-primary" name="them-nvien">Lưu thay đổi</button>
+        </form>
+      </fieldset>
+      <!-- Thuchanh_5 -->
+      <fieldset id="chinh-sua-nvien">
+        <legend><h2>CHỈNH SỬA NHÂN VIÊN</h2></legend>
+        <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
+        <hr>
+        <form method="post">
+          <table style="width: 100%">
+            <tr>
+              <td><strong>MANV</strong></td>
+              <td><input type="text" name="manv" id="manv" value="" readonly /></td>
+            </tr>
+            <tr>
+              <td><strong>HỌ TÊN</strong></td>
+              <td><input type="text" name="hoten" id="hoten" placeholder="Nhập họ tên nhân viên..." required /></td>
+            </tr>
+            <tr>
+              <td><strong>NGÀY SINH</strong></td>
+              <td><input type="date" name="namsinh" id="namsinh" value="<?php echo date('Y-m-d', time());?>" placeholder="Nhập họ tên nhân viên..." /></td>
+            </tr>
+            <tr>
+              <td><strong>GIỚI TÍNH</strong></td>
+              <td>
+                Nam <input type="radio" name="gioitinh" id="nam" value="Nam" checked/>
+                Nữ <input type="radio" name="gioitinh" id="nu" value="Nu" />
+              </td>
+            </tr>
+            <tr>
+              <td><strong>CHỨC VỤ</strong></td>
+              <td>
+                <select name="chucvu" id="chucvu">
+                  <?php
+                  $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
+                  $result_select_cv = mysql_query($sql_select_cv);
+                  while ($row_cvu = mysql_fetch_array($result_select_cv)) {
+                    echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
+                  }
+                  ?>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>ĐƠN VỊ</strong></td>
+              <td>
+                <select name="donvi" id="donvi">
+                  <?php
+                  $sql_select_dv = "SELECT * FROM loc_thuc_donvi";
+                  $result_select_dv = mysql_query($sql_select_dv);
+                  while ($row_dvi = mysql_fetch_array($result_select_dv)) {
+                    echo '<option value="'.$row_dvi['madv'].'">'.$row_dvi['donvi'].'</option>';
+                  }
+                  ?>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>LƯƠNG</strong></td>
+              <td><input type="number" min="1000" name="luong" id="luong" placeholder="Nhập lương nhân viên..." required /> (nghìn đồng)</td>
+            </tr>
+          </table>
+          <hr>
+          <button type="submit" class="btn-primary" name="sua-nvien">Lưu thay đổi</button>
+        </form>
+      </fieldset>
+      <fieldset id="them-hinhanh-nvien">
+        <legend><h2>THÊM MỚI HÌNH ẢNH NHÂN VIÊN</h2></legend>
+        <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
+        <hr>
+        <form method="post" enctype="multipart/form-data">
+          <p>Nhân viên:
+            <select name="manv">
+              <?php
+                $sql_select_nv = "SELECT * FROM loc_thuc_nhanvien";
+                $result_select_nv = mysql_query($sql_select_nv);
+                while ($row_nvien = mysql_fetch_array($result_select_nv)) {
+                  echo '<option value="'.$row_nvien['manv'].'">'.$row_nvien['hoten'].'</option>';
+                }
+              ?>
+            </select>
+          </p>
+          <input type="file" name="img_nv" style="margin-bottom: 10px;" /><br>
+          <button type="submit" class="btn-primary" name="upload_img_nv">Thêm mới</button>
+        </form>
+      </fieldset>
+      <fieldset id="chinh-sua-hinhanh-nvien">
+        <legend><h2>CHỈNH SỬA HÌNH ẢNH NHÂN VIÊN</h2></legend>
+        <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
+        <hr>
+        <form method="post" enctype="multipart/form-data">
+          <p>Thay đổi hình ảnh cho nhân viên:
+            <input type="hidden" name="manv" id="manv_ha" value="" />
+            <input type="text" id="hoten_ha" value="" disabled />
+          </p>
+          <input type="file" name="img_nv" style="margin-bottom: 10px;" /><br>
+          <button type="submit" class="btn-primary" name="upload_img_nv">Cập nhật</button>
+        </form>
+      </fieldset>
+      <fieldset id="qly-don-vi">
+        <legend><h2>PHÒNG BAN/ĐƠN VỊ</h2></legend>
+        <!-- <fieldset>
+          <legend>Quản lý đơn vị</legend> -->
+          <center>
+            <form method="post">
+              <label>Thêm đơn vị</label>
+              <input type="text" name="madv" value="<?php
+              // Tự động sinh mã đơn vị
+              $return_madv_end = mysql_fetch_array(mysql_query("SELECT madv FROM loc_thuc_donvi ORDER BY madv DESC "));
+              $madv_next = $return_madv_end[0] + 1;
+              if (($madv_next >= 1000) && ($madv_next >= 100)) {
+                  echo $madv_next;
+              } else if ($madv_next >= 10) {
+                  echo '0'.$madv_next;
+              } else if ($madv_next >= 1) {
+                  echo '00'.$madv_next;
+              }
+              ?>" placeholder="Nhập mã đơn vị" required />
+              <input type="text" name="dvi" placeholder="Nhập tên đơn vị" required />
+              <button type="submit" class="btn-primary" name="add_dvi">Thêm</button>
             </form>
-          </fieldset>
-          <fieldset id="chinh-sua-hinhanh-nvien">
-            <legend><h2>CHỈNH SỬA HÌNH ẢNH NHÂN VIÊN</h2></legend>
-            <button onclick="showStuff('qly-nhan-vien',[],[]); return false;">Quay lại</button>
             <hr>
-            <form method="post" enctype="multipart/form-data">
-              <p>Thay đổi hình ảnh cho nhân viên:
-                <input type="hidden" name="manv" id="manv_ha" value="" disabled/>
-                <input type="text" id="hoten_ha" value="" disabled/>
-              </p>
-              <input type="file" name="img_nv" />
-              <input type="submit" name="upload_img_nv" value="Cập nhật" />
+            <table style="text-align: center; width: 100%">
+              <thead>
+                <tr>
+                  <th>MADV</th>
+                  <th>ĐƠN VỊ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                  $sql_qry_list_nvien = "SELECT * FROM loc_thuc_donvi"; // Ltweb
+                  $qry_list_nvien = mysql_query($sql_qry_list_nvien);
+                  while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
+                    echo "<tr>";
+                    echo "<td>{$row_list_nvien['madv']}</td>";
+                    echo "<td>{$row_list_nvien['donvi']}</td>";
+                    echo "</tr>";
+                  }
+                ?>
+              </tbody>
+            </table>
+          </center>
+        <!-- </fieldset> -->
+      </fieldset>
+      <fieldset id="qly-chuc-vu">
+        <legend><h2>CHỨC VỤ</h2></legend>
+        <!-- <fieldset>
+          <legend>Quản lý chức vụ</legend> -->
+          <center>
+            <form method="post">
+              <label>Thêm chức vụ</label>
+              <input type="text" name="macv" value="<?php
+              // Tự động sinh mã chức vụ
+              $return_macv_end = mysql_fetch_array(mysql_query("SELECT macv FROM loc_thuc_chucvu ORDER BY macv DESC "));
+              $macv_next = $return_macv_end[0] + 1;
+              if (($macv_next >= 1000) && ($macv_next >= 100)) {
+                  echo $macv_next;
+              } else if ($macv_next >= 10) {
+                  echo '0'.$macv_next;
+              } else if ($macv_next >= 1) {
+                  echo '00'.$macv_next;
+              }
+              ?>" placeholder="Nhập mã chức vụ" required />
+              <input type="text" name="cvu" placeholder="Nhập tên chức vụ" required />
+              <button type="submit" class="btn-primary" name="add_cvu">Thêm</button>
             </form>
-          </fieldset>
-          <fieldset id="qly-don-vi">
-            <legend><h2>PHÒNG BAN/ĐƠN VỊ</h2></legend>
-            <!-- <fieldset>
-              <legend>Quản lý đơn vị</legend> -->
-              <center>
-                <form method="post">
-                  <label>Thêm đơn vị</label>
-                  <input type="text" name="madv" placeholder="Nhập mã đơn vị" required />
-                  <input type="text" name="dvi" placeholder="Nhập tên đơn vị" required />
-                  <button type="submit" name="add_dvi">Thêm</button>
-                </form>
-                <hr>
-                <table border=1 style="text-align: center; width: 100%">
-                  <thead>
-                    <tr>
-                      <th>MADV</th>
-                      <th>ĐƠN VỊ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                      $sql_qry_list_nvien = "SELECT * FROM loc_thuc_donvi"; // Ltweb
-                      $qry_list_nvien = mysql_query($sql_qry_list_nvien);
-                      while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
-                        echo "<tr>";
-                        echo "<td>{$row_list_nvien['madv']}</td>";
-                        echo "<td>{$row_list_nvien['donvi']}</td>";
-                        echo "</tr>";
-                      }
-                    ?>
-                  </tbody>
-                </table>
-              </center>
-            <!-- </fieldset> -->
-          </fieldset>
-          <fieldset id="qly-chuc-vu">
-            <legend><h2>CHỨC VỤ</h2></legend>
-            <!-- <fieldset>
-              <legend>Quản lý chức vụ</legend> -->
-              <center>
-                <form method="post">
-                  <label>Thêm chức vụ</label>
-                  <input type="text" name="macv" placeholder="Nhập mã chức vụ" required />
-                  <input type="text" name="cvu" placeholder="Nhập tên chức vụ" required />
-                  <button type="submit" name="add_cvu">Thêm</button>
-                </form>
-                <hr>
-                <table border=1 style="text-align: center; width: 100%">
-                  <thead>
-                    <tr>
-                      <th>MACV</th>
-                      <th>CHỨC VỤ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                      $sql_qry_list_nvien = "SELECT * FROM loc_thuc_chucvu"; // Ltweb
-                      $qry_list_nvien = mysql_query($sql_qry_list_nvien);
-                      while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
-                        echo "<tr>";
-                        echo "<td>{$row_list_nvien['macv']}</td>";
-                        echo "<td>{$row_list_nvien['chucvu']}</td>";
-                        echo "</tr>";
-                      }
-                    ?>
-                  </tbody>
-                </table>
-              </center>
-            <!-- </fieldset> -->
-          </fieldset>
-        </div>
-      </div>
+            <hr>
+            <table style="text-align: center; width: 100%">
+              <thead>
+                <tr>
+                  <th>MACV</th>
+                  <th>CHỨC VỤ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                  $sql_qry_list_nvien = "SELECT * FROM loc_thuc_chucvu"; // Ltweb
+                  $qry_list_nvien = mysql_query($sql_qry_list_nvien);
+                  while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
+                    echo "<tr>";
+                    echo "<td>{$row_list_nvien['macv']}</td>";
+                    echo "<td>{$row_list_nvien['chucvu']}</td>";
+                    echo "</tr>";
+                  }
+                ?>
+              </tbody>
+            </table>
+          </center>
+        <!-- </fieldset> -->
+      </fieldset>
     </div>
     <footer>
       <h3 style="color: blue; float: center">VĂN LỘC B1400703 - NGUYÊN THỨC B1400731  | CT428 - LẬP TRÌNH WEB | PGS.TS ĐỖ THANH NGHỊ</h3>
@@ -545,6 +675,17 @@ if(isset($_POST['add_cvu'])) {
 
 // Thuchanh_4: HTML, PHP, MySQL
 // // Thêm nhân viên
+if(isset($_POST['them-nvien'])) {
+  $sql_insert_nvien = "INSERT INTO loc_thuc_nhanvien VALUES ('{$_POST['manv']}', null, '{$_POST['hoten']}', '{$_POST['namsinh']}', '{$_POST['gioitinh']}', '{$_POST['donvi']}', '{$_POST['chucvu']}', '{$_POST['luong']}')"; // Ltweb
+  $qry_insert_nvien = mysql_query($sql_insert_nvien);
+
+  if ($qry_insert_nvien) echo "<script>
+  sessionStorage.setItem('page', 'qly-nhan-vien');
+  alert('Thêm mới thành công!');</script>";
+  else echo "<script>alert('Thêm mới thất bại!')</script>";
+
+  echo '<meta http-equiv="refresh" content="0">';
+}
 
 // // Thêm ảnh nhân viên
 if(isset($_POST['upload_img_nv'])) {
@@ -555,25 +696,22 @@ if(isset($_POST['upload_img_nv'])) {
       echo "Error: " . $_FILES["img_nv"]["error"] . "<br />";
   } else if (($_FILES["img_nv"]["size"] / 1024) <= 2048) { // Giới hạn kích thước nhỏ hơn 2MB
       // Tên file ảnh
-      $temp = explode(".", $_FILES["img_nv"]["name"]);
-      $file_name = 'imgNvien_' . $manv . '_' . date("YmdHis") . '.' . end($temp);
-      $file_upload = move_uploaded_file($_FILES["img_nv"]["tmp_name"], $file_name);
-      // $imgFilename = $file_name;
-      //
-      // // Mở file ảnh để đọc với chế độ đọc binary
-      // $fh = fopen($imgFilename, "rb");
-      // $imgData = mysql_real_escape_string(fread($fh, filesize($imgFilename)));
-      // fclose($fh);
-      //
-      // // Chèn nội dung file ảnh vào table loc_thuc_nhanvien
-      // $sql_upload_img_nvien = "UPDATE loc_thuc_nhanvien SET hinhanh = '{$imgData}' WHERE manv = '{$manv}'";
-      // $qry_upload_img_nvien = mysql_query($sql_upload_img_nvien);
+      $img_tmp = addslashes(file_get_contents($_FILES['img_nv']['tmp_name']));
 
-      if ($file_upload) echo "<script>alert('Thêm mới thành công!')</script>";
-      else echo "<script>alert('Thêm mới thất bại!')</script>";
+      // // Chèn nội dung file ảnh vào table loc_thuc_nhanvien
+      $sql_upload_img_nvien = "UPDATE loc_thuc_nhanvien SET hinhanh = '{$img_tmp}' WHERE manv = '{$manv}'";
+      $qry_upload_img_nvien = mysql_query($sql_upload_img_nvien);
+
+      if ($qry_upload_img_nvien) echo "<script>
+      sessionStorage.setItem('page', 'qly-nhan-vien');
+      alert('Thao tác thành công!');</script>";
+      else echo "<script>
+      sessionStorage.setItem('page', 'qly-nhan-vien');
+      alert('Thao tác thất bại!')</script>";
   }
   else {
-      echo "<script>alert('Thêm mới thất bại!')</script>";
+      echo "<script>sessionStorage.setItem('page', 'qly-nhan-vien');
+      alert('Thao tác thất bại!')</script>";
   }
 
   echo '<meta http-equiv="refresh" content="0">';
@@ -581,8 +719,32 @@ if(isset($_POST['upload_img_nv'])) {
 
 // Thuchanh_5: HTML, PHP, MySQL
 // // Cập nhật thông tin nhân viên
+if(isset($_POST['sua-nvien'])) {
+  $sql_update_nvien = "UPDATE loc_thuc_nhanvien SET hoten = '".$_POST['hoten']."', namsinh = '".$_POST['namsinh']."', gioitinh = '".$_POST['gioitinh']."', madv = '".$_POST['donvi']."', macv = '".$_POST['chucvu']."', luong = ".$_POST['luong']." WHERE manv = '".$_POST['manv']."'"; // Ltweb
+  $qry_update_nvien = mysql_query($sql_update_nvien);
+
+  if ($qry_update_nvien) echo "<script>
+  sessionStorage.setItem('page', 'qly-nhan-vien');
+  alert('Chỉnh sửa thành công!');</script>";
+  else echo "<script>alert('Chỉnh sửa thất bại!')</script>";
+
+  echo '<meta http-equiv="refresh" content="0">';
+}
 
 // // Xóa nhân viên
+if(isset($_POST['delete-nvien'])) {
+  foreach ($_POST['manv'] as $key => $manv) {
+    $sql_del_nvien = "DELETE FROM loc_thuc_nhanvien WHERE manv='{$manv}'"; // Ltweb
+    $qry_del_nvien = mysql_query($sql_del_nvien);
+  }
+
+  if ($qry_del_nvien) echo "<script>
+  sessionStorage.setItem('page', 'qly-nhan-vien');
+  alert('Xóa thành công!');</script>";
+  else echo "<script>alert('Xóa thất bại!')</script>";
+
+  echo '<meta http-equiv="refresh" content="0">';
+}
 
 // Thuchanh_6: Hoàn chỉnh giao diện
 

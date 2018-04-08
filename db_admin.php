@@ -134,6 +134,16 @@ if(isset($_POST['upload-ct428-advanced'])) {
     }
 }
 
+// Delete row in table
+// if (isset($_POST['action-tbl-row'])) {
+//     foreach ($_POST['row_action'] as $key => $row_del) {
+//       $sql_drop_db = "DELETE FROM Student WHERE field_name={$row_del}";
+//       mysql_query($sql_drop_db);
+//     }
+//
+//     echo '<meta http-equiv="refresh" content="0">';
+// }
+
 // Update MySQLAdmin
 if(isset($_POST['update-myadmin'])) {
     if ($_FILES["file-update"]["error"] > 0) {
@@ -173,12 +183,13 @@ if (isset($_POST['exit-server-btn'])) {
     <meta charset="utf-8">
     <title>MySQLAdmin</title>
     <script type="text/javascript">
-      function showStuff(id, tbl) {
-        document.getElementById(id).style.display = 'block';
+      function showStuff(id) {
+        var tbl = ['database-box','browse-box','structure-box','sql-box','export-box','import-box','update-box'];
         // hide the table
         for (i=0; i<tbl.length; i++) {
           document.getElementById(tbl[i]).style.display = 'none';
         }
+        document.getElementById(id).style.display = 'block';
       }
 
       function toggle(source,name) {
@@ -381,13 +392,13 @@ if (isset($_POST['exit-server-btn'])) {
         </div>
         <div id="menu-bar">
           <form action="" method="post">
-              <button type="button" style="margin-left: 5px" id="show-database-box" onclick="showStuff('database-box', ['browse-box','structure-box','sql-box','export-box','import-box','update-box']); return false;">Databases</button>
-              <button type="button" id="show-infomation" onclick="showStuff('browse-box', ['database-box','structure-box','sql-box','export-box','import-box','update-box']); return false;">Browse</button>
-              <button type="button" id="show-structure" onclick="showStuff('structure-box', ['browse-box','database-box','sql-box','export-box','import-box','update-box']); return false;">Structure</button>
-              <button type="button" id="show-sql-box" onclick="showStuff('sql-box', ['browse-box','structure-box','database-box','export-box','import-box','update-box']); return false;">SQL</button>
-              <button type="button" id="show-export-box" onclick="showStuff('export-box', ['browse-box','structure-box','sql-box','database-box','import-box','update-box']); return false;">Export</button>
-              <button type="button" id="show-import-box" onclick="showStuff('import-box', ['browse-box','structure-box','sql-box','export-box','database-box','update-box']); return false;">Import</button>
-              <button type="button" id="show-import-box" onclick="showStuff('update-box', ['browse-box','structure-box','sql-box','export-box','import-box','database-box']); return false;">Update</button>
+              <button type="button" style="margin-left: 5px" id="show-database-box" onclick="showStuff('database-box'); return false;">Databases</button>
+              <button type="button" id="show-infomation" onclick="showStuff('browse-box'); return false;">Browse</button>
+              <button type="button" id="show-structure" onclick="showStuff('structure-box'); return false;">Structure</button>
+              <button type="button" id="show-sql-box" onclick="showStuff('sql-box'); return false;">SQL</button>
+              <button type="button" id="show-export-box" onclick="showStuff('export-box'); return false;">Export</button>
+              <button type="button" id="show-import-box" onclick="showStuff('import-box'); return false;">Import</button>
+              <button type="button" id="show-import-box" onclick="showStuff('update-box'); return false;">Update</button>
               <button type="submit" name="exit-server-btn" style="float: right; margin-right: 5px">Logout</button>
               <button type="submit" name="exit-db-btn" style="float: right; margin-right: 5px">Exit Database</button>
               <button type="button" id="reload-box" style="float: right; margin-right: 5px" onClick="window.location.reload()">Reload</button>
@@ -442,7 +453,7 @@ if (isset($_POST['exit-server-btn'])) {
               }
             ?>
             </select>
-            <button type="button" id="show-add-db-box" onclick="showStuff('database-box', ['browse-box','structure-box','sql-box','export-box','import-box']); return false;">New</button>
+            <button type="button" id="show-add-db-box" onclick="showStuff('database-box'); return false;">New</button>
           </form>
           <?php
             if ($_SESSION['database'] != null) {
@@ -583,7 +594,7 @@ if (isset($_POST['exit-server-btn'])) {
               </div>
             </div>
         </div>
-        <div id="browse-box" style="<?php if($_SESSION['table'] == null) echo '; display: none'; ?>">
+        <div id="browse-box" style="display: none">
           <h4>Browsing rows</h4><hr>
           <fieldset>
             <legend>Rows</legend>
@@ -592,7 +603,6 @@ if (isset($_POST['exit-server-btn'])) {
                 $txt_query = "DESCRIBE ".$_SESSION['table'];
                 $query_tbl_info = mysql_query($txt_query);
                 $tbl_nums_field = mysql_num_rows($query_tbl_info);
-                $query_tbl_row = mysql_query($txt_query);
 
                 echo '<form action="" method="post">
                 <table border=1 style="width:99%; margin-left:2px; text-align:center">
@@ -625,7 +635,7 @@ if (isset($_POST['exit-server-btn'])) {
             ?>
           </fieldset>
         </div>
-        <div id="structure-box" style="<?php if(($_SESSION['database'] != null) && ($_SESSION['table'] == null)) {echo '';} else if(($_SESSION['database'] != null) && ($_SESSION['table'] != null)) {echo '';} else {echo '; display: none';} ?>">
+        <div id="structure-box" style="<?php if(($_SESSION['database'] != null) || ($_SESSION['database'] != null) && ($_SESSION['table'] != null)) {echo '';} else {echo 'display: none';} ?>">
           <h4>Table Structure</h4><hr>
           <fieldset>
             <legend>Structure</legend>
