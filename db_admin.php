@@ -609,7 +609,7 @@ if (isset($_POST['exit-server-btn'])) {
                 <thead>
                   <tr style="background-color: #00ff00">
                     <th><input type="checkbox" onClick="'."toggle(this,'row_action[]')".'" /></th>';
-                  while($row_th = mysql_fetch_array($query_tbl_row)) {
+                  while($row_th = mysql_fetch_array($query_tbl_info)) {
                       echo "<th>{$row_th['Field']}</th>";
                   }
                 echo '</tr>
