@@ -18,6 +18,7 @@ session_start();
 <html lang="vi" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý nhân sự</title>
     <script type="text/javascript">
       // list fieldset id
@@ -72,6 +73,19 @@ session_start();
               x.style.display = "none";
           }
       }
+
+      function callMenuBar() {
+          var x = document.getElementById("menu-bar");
+          if (x.className === "menu-bar") {
+              x.className += " responsive";
+          } else {
+              x.className = "menu-bar";
+          }
+      }
+
+      function closeMenuBar() {
+          document.getElementById("menu-bar").className = "menu-bar";
+      }
     </script>
     <style media="screen">
       /* CSS for HTML tag */
@@ -93,6 +107,13 @@ session_start();
             background-color: rgb(29, 223, 72);
         }
 
+        header h2 {
+            color: white;
+            margin: 15px 0 0 20px;
+            float: center;
+            font-size: 1.8em;
+        }
+
         footer {
             height: 50px;
             float: left;
@@ -105,13 +126,15 @@ session_start();
             background-color: rgb(29, 223, 72);
         }
 
-        header h2, h4 {
+        footer h3 {
             color: white;
-            margin: 15px 0 0 20px;
+            float: center;
         }
 
         table {
             float: left;
+            width: 100%;
+            text-align: center;
         }
 
         fieldset {
@@ -126,74 +149,15 @@ session_start();
             border-radius: 10px;
         }
 
-      /* CSS for HTML class */
-        .menu-bar {
-            width: 100%;
-            height: 32px;
-            float: left;
-            background-color: rgb(29, 223, 72);
-        }
-
-        .menu-bar ul{
-          	list-style: none;
-            margin: 0px 0 0 0px;
-            padding: 0px 0 0 0px;
-        }
-
-        .menu-bar ul li {
-            font-weight: bold;
-            float: left;
-            background-color: rgb(29, 223, 72);
-        }
-
-        .menu-bar ul a, ul a:visited {
-          	padding: 5px 5px 5px 15px;
-          	display: block;
-          	text-decoration: none;
-        }
-
-        .menu-bar ul a:hover, ul a:active, ul a:focus {
-          	background-color: #4CAF50;
-          	color: #FFF;
-        }
-
-        .menu-bar a {
-            text-decoration: none;
-            color: white;
-        }
-
-        .list-nvien {
-            width: 100%;
-            text-align: center;
-            float: left;
-        }
-
-        .list-nvien-detail {
-            width: 205px;
-            margin: 0 5px 10px 5px;
+        select, option {
+            background-color: white;
+            color: black;
+            padding: 5px;
+            border: 1px solid black;
             border-radius: 10px;
-            border: 1px solid #ddd;
-            float: left;
         }
 
-        .list-nvien-detail img {
-            width: 100%;
-            height: 220px;
-        }
-
-        .qly-nvien-tbl th, td {
-            border: 1px solid #ddd;
-        }
-
-        .qly-nvien-tbl th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .qly-nvien-tbl tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
+      /* CSS for HTML class */
         .btn {
             background-color: white;
             color: blue;
@@ -248,17 +212,195 @@ session_start();
             border-radius: 10px;
         }
 
+        .menu-bar {
+            overflow: hidden;
+            background-color: rgb(29, 223, 72);
+        }
+
+        .menu-bar a {
+            float: left;
+            display: block;
+            color: #FFF;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .menu-bar a:hover {
+            background-color: #4CAF50;
+            color: #FFF;
+        }
+
+        .menu-bar .icon {
+            display: none;
+        }
+
+        /* .menu-bar {
+            width: 100%;
+            height: 32px;
+            float: left;
+            background-color: rgb(29, 223, 72);
+        }
+
+        .menu-bar ul{
+          	list-style: none;
+            margin: 0px 0 0 0px;
+            padding: 0px 0 0 0px;
+        }
+
+        .menu-bar ul li {
+            font-weight: bold;
+            float: left;
+            background-color: rgb(29, 223, 72);
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+        .menu-bar ul a, ul a:visited {
+          	padding: 5px 5px 5px 15px;
+          	display: block;
+          	text-decoration: none;
+        }
+
+        .menu-bar ul a:hover, ul a:active, ul a:focus {
+          	background-color: #4CAF50;
+          	color: #FFF;
+        }
+
+        .menu-bar a {
+            text-decoration: none;
+            color: white;
+        } */
+
         .main-content {
             width: 100%;
             height: 100%;
             float: left;
-            margin-top: 75px;
+            margin-top: 80px;
             float: left;
             margin-bottom: 100px;
         }
 
         .main-content button {
             margin-right: 5px;
+        }
+
+        .list-nvien {
+            width: 100%;
+            text-align: center;
+            margin-left: 15px;
+            float: left;
+        }
+
+        .list-nvien-detail {
+            width: 205px;
+            margin: 0 5px 10px 5px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            float: left;
+        }
+
+        .list-nvien-detail img {
+            width: 100%;
+            border-radius: 10px;
+            height: 220px;
+        }
+
+        .list-nvien-detail b {
+            color: blue;
+        }
+
+        .list-nvien-detail span {
+            color: rgb(176, 177, 177);
+        }
+
+        .qly-nvien-tbl table, th, td {
+            border: 0px;
+        }
+
+        /* .qly-nvien-tbl table, th, td {
+            border: 1px solid #ddd;
+        } */
+
+        .qly-nvien-tbl th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* .qly-nvien-tbl tr:nth-child(even) {
+            background-color: #f2f2f2;
+        } */
+
+        .qly-nvien-tbl tr {
+            background-color: #f2f2f2;
+        }
+
+        .qly-nvien-tbl button {
+            margin: 5px 0 5px 0;
+        }
+
+        .tbl-nvien-not-qly table {
+            text-align: left;
+        }
+
+        .qly-don-vi tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .qly-chuc-vu tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .qly-don-vi th {
+            border-bottom: 1px solid #ddd;
+            background: #4CAF50;
+            color: white;
+        }
+
+        .qly-chuc-vu th {
+            border-bottom: 1px solid #ddd;
+            background: #4CAF50;
+            color: white;
+        }
+
+        .qly-don-vi td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .qly-chuc-vu td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .full-screen {
+            display: block;
+        }
+
+        .mobile-screen {
+            display: none;
+        }
+
+      /* Custom scrollbar - w3school */
+        /* width */
+        ::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            /* background: #f1f1f1; */
+            background: rgb(29, 223, 72);
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            /* background: #888; */
+            background: rgb(29, 223, 72);
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4CAF50;
         }
 
       /* CSS for HTML tag id */
@@ -275,22 +417,87 @@ session_start();
             display: none;
             float: left;
         }
+
+      /* Responsive */
+      @media only screen and (max-width: 920px) {
+        header {
+            height: 100px;
+            float: left;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            color: white;
+            text-align: center;
+            background-color: rgb(29, 223, 72);
+        }
+
+        footer {
+            height: 60px;
+            float: left;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: white;
+            text-align: center;
+            background-color: rgb(29, 223, 72);
+        }
+
+        .menu-bar a:not(:first-child) {
+            display: none;
+        }
+        .menu-bar a.icon {
+            float: right;
+            display: block;
+        }
+
+        .menu-bar.responsive {
+            position: relative;
+        }
+        .menu-bar.responsive .icon {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        .menu-bar.responsive a {
+            float: none;
+            display: block;
+            text-align: left;
+        }
+
+        .full-screen {
+            display: none;
+        }
+
+        .mobile-screen {
+            display: block;
+        }
+      }
     </style>
   </head>
   <body onload="showFieldsetSessions(); return false;">
     <header>
-      <h2 style="float: center">QUẢN LÝ NHÂN SỰ</h2>
-      <div class="menu-bar">
+      <h2><strong>QUẢN LÝ NHÂN SỰ</strong></h2>
+      <!-- <div class="menu-bar">
         <ul>
-          <li style="margin-left: 15px;"><a onclick="showPage('trang-chu',[],[]); return false;">Trang chủ</a></li>
+          <li><a onclick="showPage('trang-chu',[],[]); return false;">Trang chủ</a></li>
           <li><a onclick="showPage('qly-nhan-vien',[],[]); return false;">Quản lý nhân viên</a></li>
           <li><a onclick="showPage('qly-don-vi',[],[]); return false;">Quản lý đơn vị</a></li>
           <li><a onclick="showPage('qly-chuc-vu',[],[]); return false;">Quản lý chức vụ</a></li>
-          <li style="margin-right: 10px; float: right;"><a onClick="window.location.reload()">Tải lại trang</a></li>
+          <li style="float: right;"><a onClick="window.location.reload()">Tải lại trang</a></li>
         </ul>
+      </div> -->
+      <div class="menu-bar" id="menu-bar">
+        <a onclick="showPage('trang-chu',[],[]); return false;">Trang chủ</a>
+        <a onclick="showPage('qly-nhan-vien',[],[]); return false;">Quản lý nhân viên</a>
+        <a onclick="showPage('qly-don-vi',[],[]); return false;">Quản lý đơn vị</a>
+        <a onclick="showPage('qly-chuc-vu',[],[]); return false;">Quản lý chức vụ</a>
+        <a onClick="window.location.reload()">Tải lại trang</a>
+        <a style="font-size:15px;" class="icon" onclick="callMenuBar()">&#9776;</a>
       </div>
     </header>
-    <div class="main-content">
+    <div class="main-content" onclick="closeMenuBar()">
       <fieldset id="trang-chu">
         <legend><h2>TRANG CHỦ</h2></legend>
         <center>
@@ -302,14 +509,14 @@ session_start();
               echo '<div class="list-nvien-detail">';
               echo '<img src="data:image/jpeg;base64,'.base64_encode( $row_list_nvien['hinhanh'] ).'" alt="Hình ảnh nhân viên"/>';
               echo "<br />";
-              echo "<b style='color: blue;'>{$row_list_nvien['hoten']}</b>";
+              echo "<b>{$row_list_nvien['hoten']}</b>";
               echo "<br />";
               $sql_qry_chucvu_of_nvien = "SELECT chucvu FROM loc_thuc_chucvu WHERE macv = '{$row_list_nvien['macv']}'";
               $qry_chucvu_of_nvien = mysql_query($sql_qry_chucvu_of_nvien);
               $chucvu = mysql_fetch_array($qry_chucvu_of_nvien);
               echo $chucvu[0];
               echo "<br />";
-              echo "<span style='color: rgb(176, 177, 177)'>{$row_list_nvien['manv']}</span>";
+              echo "<span>{$row_list_nvien['manv']}</span>";
               echo "<br />";
               echo "</div>";
             }
@@ -331,7 +538,7 @@ session_start();
             </p>
             <hr>
             <div style="width: 100%">
-              <table class="qly-nvien-tbl" style="text-align: center; width: 100%">
+              <table class="qly-nvien-tbl">
                 <thead>
                   <tr>
                     <th><input type="checkbox" onClick="toggle(this,'manv[]')" /></th>
@@ -363,9 +570,9 @@ session_start();
                       echo "<td>{$row_list_nvien['luong']}</td>";
                       echo '<td>';
                         // Thuchanh_5
-                        echo '<button style="margin: 5px 0 5px 0;" type="button" class="btn" onclick="showPage('."'chinh-sua-nvien', ['manv','hoten','namsinh','gioitinh','chucvu','donvi','luong'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['namsinh']."','".$row_list_nvien['gioitinh']."','".$row_list_nvien['macv']."','".$row_list_nvien['madv']."','".$row_list_nvien['luong']."']".'); return false;">Thông tin</button>';
+                        echo '<button type="button" class="btn" onclick="showPage('."'chinh-sua-nvien', ['manv','hoten','namsinh','gioitinh','chucvu','donvi','luong'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['namsinh']."','".$row_list_nvien['gioitinh']."','".$row_list_nvien['macv']."','".$row_list_nvien['madv']."','".$row_list_nvien['luong']."']".'); return false;">Thông tin</button>';
                         echo "<br />";
-                        echo '<button style="margin: 5px 0 5px 0;" type="button" class="btn" onclick="showPage('."'chinh-sua-hinhanh-nvien', ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">Hình ảnh</button>';
+                        echo '<button type="button" class="btn" onclick="showPage('."'chinh-sua-hinhanh-nvien', ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">Hình ảnh</button>';
                       echo '</td>';
                       echo "</tr>";
                     }
@@ -377,12 +584,12 @@ session_start();
         </div>
       </fieldset>
       <!-- Thuchanh_4 -->
-      <fieldset id="them-nvien">
+      <fieldset id="them-nvien" class="tbl-nvien-not-qly">
         <legend><h2>THÊM MỚI NHÂN VIÊN</h2></legend>
         <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
         <hr>
         <form method="post">
-          <table style="width: 100%">
+          <table>
             <tr>
               <td><strong>MANV</strong></td>
               <td><input type="text" name="manv" value="<?php
@@ -455,12 +662,12 @@ session_start();
         </form>
       </fieldset>
       <!-- Thuchanh_5 -->
-      <fieldset id="chinh-sua-nvien">
+      <fieldset id="chinh-sua-nvien" class="tbl-nvien-not-qly">
         <legend><h2>CHỈNH SỬA NHÂN VIÊN</h2></legend>
         <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
         <hr>
         <form method="post">
-          <table style="width: 100%">
+          <table>
             <tr>
               <td><strong>MANV</strong></td>
               <td><input type="text" name="manv" id="manv" value="" readonly /></td>
@@ -550,11 +757,10 @@ session_start();
           <button type="submit" class="btn-primary" name="upload_img_nv">Cập nhật</button>
         </form>
       </fieldset>
-      <fieldset id="qly-don-vi">
+      <fieldset id="qly-don-vi" class="qly-don-vi">
         <legend><h2>PHÒNG BAN/ĐƠN VỊ</h2></legend>
-        <!-- <fieldset>
-          <legend>Quản lý đơn vị</legend> -->
-          <center>
+        <center>
+          <div>
             <form method="post">
               <label>Thêm đơn vị</label>
               <input type="text" name="madv" value="<?php
@@ -573,7 +779,7 @@ session_start();
               <button type="submit" class="btn-primary" name="add_dvi">Thêm</button>
             </form>
             <hr>
-            <table style="text-align: center; width: 100%">
+            <table>
               <thead>
                 <tr>
                   <th>MADV</th>
@@ -593,14 +799,13 @@ session_start();
                 ?>
               </tbody>
             </table>
-          </center>
-        <!-- </fieldset> -->
+          </div>
+        </center>
       </fieldset>
-      <fieldset id="qly-chuc-vu">
+      <fieldset id="qly-chuc-vu" class="qly-chuc-vu">
         <legend><h2>CHỨC VỤ</h2></legend>
-        <!-- <fieldset>
-          <legend>Quản lý chức vụ</legend> -->
-          <center>
+        <center>
+          <div>
             <form method="post">
               <label>Thêm chức vụ</label>
               <input type="text" name="macv" value="<?php
@@ -619,7 +824,7 @@ session_start();
               <button type="submit" class="btn-primary" name="add_cvu">Thêm</button>
             </form>
             <hr>
-            <table style="text-align: center; width: 100%">
+            <table>
               <thead>
                 <tr>
                   <th>MACV</th>
@@ -631,7 +836,7 @@ session_start();
                   $sql_qry_list_nvien = "SELECT * FROM loc_thuc_chucvu"; // Ltweb
                   $qry_list_nvien = mysql_query($sql_qry_list_nvien);
                   while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
-                    echo "<tr>";
+                    echo '<tr>';
                     echo "<td>{$row_list_nvien['macv']}</td>";
                     echo "<td>{$row_list_nvien['chucvu']}</td>";
                     echo "</tr>";
@@ -639,12 +844,13 @@ session_start();
                 ?>
               </tbody>
             </table>
-          </center>
-        <!-- </fieldset> -->
+          </div>
+        </center>
       </fieldset>
     </div>
     <footer>
-      <h3 style="color: blue; float: center">VĂN LỘC B1400703 - NGUYÊN THỨC B1400731  | CT428 - LẬP TRÌNH WEB | PGS.TS ĐỖ THANH NGHỊ</h3>
+      <h3 class="full-screen">VĂN LỘC B1400703 - NGUYÊN THỨC B1400731  | CT428 - LẬP TRÌNH WEB | PGS.TS ĐỖ THANH NGHỊ</h3>
+      <h4 class="mobile-screen">Copyright @ 2018 <br> Nhóm Văn Lộc - Nguyên Thức</h4>
     </footer>
   </body>
 </html>
