@@ -18,12 +18,14 @@ session_start();
 <html lang="vi" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <!-- Co giãn web theo tỉ lệ khung hình -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý nhân sự</title>
     <script type="text/javascript">
       // list fieldset id
       var fieldsetId = ['trang-chu','qly-nhan-vien','qly-don-vi','qly-chuc-vu','them-nvien','them-hinhanh-nvien','chinh-sua-nvien','chinh-sua-hinhanh-nvien'];
 
+      // Hàm hiển thị vùng nội dung
       function showPage(id, prop, value) {
         for (i=0; i<fieldsetId.length; i++) {
           document.getElementById(fieldsetId[i]).style.display = 'none';
@@ -44,6 +46,7 @@ session_start();
         }
       }
 
+      // Hàm hiển thị vùng nội dung được ghi nhớ trước đó trong phiên làm việc
       function showFieldsetSessions() {
         // hide the table
         for (i=0; i<fieldsetId.length; i++) {
@@ -55,6 +58,7 @@ session_start();
         } else document.getElementById(sessionStorage.getItem('page')).style.display = 'block';
       }
 
+      // Hàm checkall cho checkbox
       function toggle(source,name) {
         checkboxes = document.getElementsByName(name);
         for(var i=0, n=checkboxes.length;i<n;i++) {
@@ -62,6 +66,7 @@ session_start();
         }
       }
 
+      // Hàm truyền giá trị vào các text field
       function showHideElement(primary, second, value) {
           var x = document.getElementById(primary);
           if (x.style.display === "none") {
@@ -74,6 +79,7 @@ session_start();
           }
       }
 
+      // Hàm gọi menu-bar ở các thiết bị có kích thước khung hình nhỏ hơn mặc đinh - tính năng responsive
       function callMenuBar() {
           var x = document.getElementById("menu-bar");
           if (x.className === "menu-bar") {
@@ -83,18 +89,21 @@ session_start();
           }
       }
 
+      // Hàm đóng menu-bar khi ấn vào bất kỳ vị trí nào trong page
       function closeMenuBar() {
           document.getElementById("menu-bar").className = "menu-bar";
       }
     </script>
     <style media="screen">
       /* CSS for HTML tag */
+        /* thẻ body */
         body {
             width: 99%;
             height: 100%;
             background-color: rgba(85, 164, 246, 0.19);
         }
 
+        /* thẻ header */
         header {
             height: 50px;
             float: left;
@@ -107,6 +116,7 @@ session_start();
             background-color: rgb(29, 223, 72);
         }
 
+        /* thẻ h2 trong header */
         header h2 {
             color: white;
             margin: 15px 0 0 20px;
@@ -114,6 +124,7 @@ session_start();
             font-size: 1.8em;
         }
 
+        /* thẻ footer */
         footer {
             height: 50px;
             float: left;
@@ -126,21 +137,25 @@ session_start();
             background-color: rgb(29, 223, 72);
         }
 
+        /* thẻ h3 trong footer */
         footer h3 {
             color: white;
             float: center;
         }
 
+        /* thẻ table */
         table {
             float: left;
             width: 100%;
             text-align: center;
         }
 
+        /* thẻ fieldset */
         fieldset {
             border: 0px;
         }
 
+        /* thẻ input */
         input {
             background-color: white;
             color: black;
@@ -149,6 +164,7 @@ session_start();
             border-radius: 10px;
         }
 
+        /* các thẻ select và option */
         select, option {
             background-color: white;
             color: black;
@@ -158,6 +174,7 @@ session_start();
         }
 
       /* CSS for HTML class */
+        /* lớp btn cho button */
         .btn {
             background-color: white;
             color: blue;
@@ -167,6 +184,7 @@ session_start();
             border-radius: 10px;
         }
 
+        /* sự kiện hover cho lớp btn */
         .btn:hover {
             background-color: blue;
             color: white;
@@ -176,6 +194,7 @@ session_start();
             border-radius: 10px;
         }
 
+        /* lớp btn-primary cho thẻ button */
         .btn-primary {
             background-color: blue;
             color: white;
@@ -185,6 +204,7 @@ session_start();
             border-radius: 10px;
         }
 
+        /* sự kiện hover cho lớp btn-primary */
         .btn-primary:hover {
             background-color: white;
             color: blue;
@@ -194,6 +214,7 @@ session_start();
             border-radius: 10px;
         }
 
+        /* lớp btn-danger cho thẻ button */
         .btn-danger {
             background-color: red;
             color: white;
@@ -203,6 +224,7 @@ session_start();
             border-radius: 10px;
         }
 
+        /* sự kiện hover cho lớp btn-danger */
         .btn-danger:hover {
             background-color: white;
             color: red;
@@ -212,11 +234,13 @@ session_start();
             border-radius: 10px;
         }
 
+        /* lớp menu-bar */
         .menu-bar {
             overflow: hidden;
             background-color: rgb(29, 223, 72);
         }
 
+        /* thẻ a trong lớp menu-bar */
         .menu-bar a {
             float: left;
             display: block;
@@ -227,15 +251,18 @@ session_start();
             font-size: 17px;
         }
 
+        /* sự kiện hover của thẻ a trong lớp menu-bar */
         .menu-bar a:hover {
             background-color: #4CAF50;
             color: #FFF;
         }
 
+        /* lớp icon hiển thị icon menu-bar ở giao diện responsive */
         .menu-bar .icon {
             display: none;
         }
 
+        /* mẫu giao diện menu-bar kiểu cũ sử dụng thẻ ul-li */
         /* .menu-bar {
             width: 100%;
             height: 32px;
@@ -273,6 +300,7 @@ session_start();
             color: white;
         } */
 
+        /* lớp main-content để hiển thị các nội dung chính của web */
         .main-content {
             width: 100%;
             height: 100%;
@@ -282,10 +310,12 @@ session_start();
             margin-bottom: 100px;
         }
 
+        /* định nghĩa các thẻ button trong main-content */
         .main-content button {
             margin-right: 5px;
         }
 
+        /* lớp list-nvien hiển thị danh sách nhân viên tại trang chủ */
         .list-nvien {
             width: 100%;
             text-align: center;
@@ -293,6 +323,7 @@ session_start();
             float: left;
         }
 
+        /* lớp list-nvien-detail hiển thị từng cá nhân trong danh sách nhân viên */
         .list-nvien-detail {
             width: 205px;
             margin: 0 5px 10px 5px;
@@ -301,20 +332,24 @@ session_start();
             float: left;
         }
 
+        /* thẻ img hiển thị hình ảnh của nhân viên trong lớp list-nvien-detail */
         .list-nvien-detail img {
             width: 100%;
             border-radius: 10px;
             height: 220px;
         }
 
+        /* thẻ b để in đậm tên của nhân viên trong lớp list-nvien-detail */
         .list-nvien-detail b {
             color: blue;
         }
 
+        /* thẻ span để trang trí ô mã số nhân viên trong lớp list-nvien-detail */
         .list-nvien-detail span {
             color: rgb(176, 177, 177);
         }
 
+        /* định nghĩa các thẻ table, th, td trong lớp qly-nvien-tbl của bảng quản lý nhân viên */
         .qly-nvien-tbl table, th, td {
             border: 0px;
         }
@@ -323,6 +358,7 @@ session_start();
             border: 1px solid #ddd;
         } */
 
+        /* định nghĩa màu sắc của dòng tên trường hiển thị th */
         .qly-nvien-tbl th {
             background-color: #4CAF50;
             color: white;
@@ -332,18 +368,22 @@ session_start();
             background-color: #f2f2f2;
         } */
 
+        /* định nghĩa màu nền của mỗi dòng nội dung ở thẻ tr */
         .qly-nvien-tbl tr {
             background-color: #f2f2f2;
         }
 
+        /* định nghĩa khoảng cách của các button trong danh sách quản lý nhân viên */
         .qly-nvien-tbl button {
             margin: 5px 0 5px 0;
         }
 
+        /* định nghĩa bảng tại các trang chỉnh sửa nhân viên thuộc tính năng quản lý nhân viên */
         .tbl-nvien-not-qly table {
             text-align: left;
         }
 
+        /* sự kiện hover khi đưa trỏ chuột vào vùng hiển thị của thẻ tr */
         .qly-don-vi tr:hover {
             background-color: #f5f5f5;
         }
@@ -352,6 +392,7 @@ session_start();
             background-color: #f5f5f5;
         }
 
+        /* định nghĩa nhãn tên bảng hiển thị với thẻ th */
         .qly-don-vi th {
             border-bottom: 1px solid #ddd;
             background: #4CAF50;
@@ -364,6 +405,7 @@ session_start();
             color: white;
         }
 
+        /* định nghĩa viền dưới của thẻ td */
         .qly-don-vi td {
             border-bottom: 1px solid #ddd;
         }
@@ -372,6 +414,7 @@ session_start();
             border-bottom: 1px solid #ddd;
         }
 
+        /* lớp hiển thị khi ở khung hình chuẩn */
         .full-screen {
             display: block;
         }
@@ -380,6 +423,7 @@ session_start();
             display: none;
         }
 
+        /* tùy biến thanh trượt dọc scrollbar khi có nội dung quá dài theo chiều dọc */
       /* Custom scrollbar - w3school */
         /* width */
         ::-webkit-scrollbar {
@@ -404,20 +448,24 @@ session_start();
         }
 
       /* CSS for HTML tag id */
+        /* canh giữa nội dung trong các tag id liên quan */
         #trang-chu, #qly-nhan-vien, #qly-don-vi, #qly-chuc-vu {
             text-align: center;
         }
 
+        /* mặc định ẩn các trang thuộc các tag id liên quan */
         #qly-nhan-vien, #qly-don-vi, #qly-chuc-vu {
             display: none;
         }
 
+        /* quy định kích thước của các tag id liên quan */
         #them-nvien, #chinh-sua-nvien, #them-hinhanh-nvien, #chinh-sua-hinhanh-nvien {
             width: 97%;
             display: none;
             float: left;
         }
 
+        /* đoạn code định nghĩa các thẻ - lớp - tag id cho tính năng responsive */
       /* Responsive */
       @media only screen and (max-width: 920px) {
         header {
