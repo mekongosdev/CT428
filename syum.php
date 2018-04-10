@@ -4,10 +4,9 @@ $db_host = "localhost"; // Ampps
 $db_user = "root"; // Ampps
 $db_pass = "mysql"; // Ampps
 $db_name = "ltweb"; // Ampps
-$conn = mysql_connect($db_host,$db_user,$db_pass) or die(mysql_error());
-mysql_set_charset('utf8');
+$conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+mysqli_set_charset($conn, 'utf8');
 date_default_timezone_set('Asia/Ho_Chi_Minh');
-mysql_select_db($db_name) or die("mysql can not find");
 session_start();
 ?>
 <!DOCTYPE html>
@@ -454,16 +453,16 @@ session_start();
           <div class="list-nvien">
           <?php
             $sql_qry_list_nvien = "SELECT * FROM loc_thuc_nhanvien a, loc_thuc_donvi b, loc_thuc_chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ltweb
-            $qry_list_nvien = mysql_query($sql_qry_list_nvien);
-            while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
+            $qry_list_nvien = mysqli_query($conn,$sql_qry_list_nvien);
+            while ($row_list_nvien = mysqli_fetch_array($qry_list_nvien)) {
               echo '<div class="list-nvien-detail">';
               echo '<img src="data:image/jpeg;base64,'.base64_encode( $row_list_nvien['hinhanh'] ).'" alt="Hình ảnh nhân viên"/>';
               echo "<br />";
               echo "<b>{$row_list_nvien['hoten']}</b>";
               echo "<br />";
               $sql_qry_chucvu_of_nvien = "SELECT chucvu FROM loc_thuc_chucvu WHERE macv = '{$row_list_nvien['macv']}'";
-              $qry_chucvu_of_nvien = mysql_query($sql_qry_chucvu_of_nvien);
-              $chucvu = mysql_fetch_array($qry_chucvu_of_nvien);
+              $qry_chucvu_of_nvien = mysqli_query($conn,$sql_qry_chucvu_of_nvien);
+              $chucvu = mysqli_fetch_array($qry_chucvu_of_nvien);
               echo $chucvu[0];
               echo "<br />";
               echo "<span>{$row_list_nvien['manv']}</span>";
@@ -506,8 +505,8 @@ session_start();
                 <tbody>
                   <?php
                     $sql_qry_list_nvien = "SELECT * FROM loc_thuc_nhanvien a, loc_thuc_donvi b, loc_thuc_chucvu c WHERE a.madv = b.madv AND a.macv = c.macv"; // Ltweb
-                    $qry_list_nvien = mysql_query($sql_qry_list_nvien);
-                    while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
+                    $qry_list_nvien = mysqli_query($conn,$sql_qry_list_nvien);
+                    while ($row_list_nvien = mysqli_fetch_array($qry_list_nvien)) {
                       echo "<tr>";
                       echo '<td><input type="checkbox" name="manv[]" value="'.$row_list_nvien['manv'].'"</td>';
                       echo "<td>{$row_list_nvien['manv']}</td>";
@@ -544,7 +543,7 @@ session_start();
               <td><strong>MANV</strong></td>
               <td><input type="text" name="manv" value="<?php
               // Tự động sinh mã nhân viên
-              $return_manv_end = mysql_fetch_array(mysql_query("SELECT manv FROM loc_thuc_nhanvien ORDER BY manv DESC "));
+              $return_manv_end = mysqli_fetch_array(mysqli_query($conn,"SELECT manv FROM loc_thuc_nhanvien ORDER BY manv DESC "));
               $manv_next = $return_manv_end[0] + 1;
               if (($manv_next >= 100000) && ($manv_next >= 10000)) {
                   echo $manv_next;
@@ -580,8 +579,8 @@ session_start();
                 <select name="chucvu">
                   <?php
                   $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
-                  $result_select_cv = mysql_query($sql_select_cv);
-                  while ($row_cvu = mysql_fetch_array($result_select_cv)) {
+                  $result_select_cv = mysqli_query($conn,$sql_select_cv);
+                  while ($row_cvu = mysqli_fetch_array($result_select_cv)) {
                     echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
                   }
                   ?>
@@ -594,8 +593,8 @@ session_start();
                 <select name="donvi">
                   <?php
                   $sql_select_cv = "SELECT * FROM loc_thuc_donvi";
-                  $result_select_cv = mysql_query($sql_select_cv);
-                  while ($row_cvu = mysql_fetch_array($result_select_cv)) {
+                  $result_select_cv = mysqli_query($conn,$sql_select_cv);
+                  while ($row_cvu = mysqli_fetch_array($result_select_cv)) {
                     echo '<option value="'.$row_cvu['madv'].'">'.$row_cvu['donvi'].'</option>';
                   }
                   ?>
@@ -643,8 +642,8 @@ session_start();
                 <select name="chucvu" id="chucvu">
                   <?php
                   $sql_select_cv = "SELECT * FROM loc_thuc_chucvu";
-                  $result_select_cv = mysql_query($sql_select_cv);
-                  while ($row_cvu = mysql_fetch_array($result_select_cv)) {
+                  $result_select_cv = mysqli_query($conn,$sql_select_cv);
+                  while ($row_cvu = mysqli_fetch_array($result_select_cv)) {
                     echo '<option value="'.$row_cvu['macv'].'">'.$row_cvu['chucvu'].'</option>';
                   }
                   ?>
@@ -657,8 +656,8 @@ session_start();
                 <select name="donvi" id="donvi">
                   <?php
                   $sql_select_dv = "SELECT * FROM loc_thuc_donvi";
-                  $result_select_dv = mysql_query($sql_select_dv);
-                  while ($row_dvi = mysql_fetch_array($result_select_dv)) {
+                  $result_select_dv = mysqli_query($conn,$sql_select_dv);
+                  while ($row_dvi = mysqli_fetch_array($result_select_dv)) {
                     echo '<option value="'.$row_dvi['madv'].'">'.$row_dvi['donvi'].'</option>';
                   }
                   ?>
@@ -683,8 +682,8 @@ session_start();
             <select name="manv">
               <?php
                 $sql_select_nv = "SELECT * FROM loc_thuc_nhanvien";
-                $result_select_nv = mysql_query($sql_select_nv);
-                while ($row_nvien = mysql_fetch_array($result_select_nv)) {
+                $result_select_nv = mysqli_query($conn,$sql_select_nv);
+                while ($row_nvien = mysqli_fetch_array($result_select_nv)) {
                   echo '<option value="'.$row_nvien['manv'].'">'.$row_nvien['hoten'].'</option>';
                 }
               ?>
@@ -715,7 +714,7 @@ session_start();
               <label>Thêm đơn vị</label>
               <input type="text" name="madv" value="<?php
               // Tự động sinh mã đơn vị
-              $return_madv_end = mysql_fetch_array(mysql_query("SELECT madv FROM loc_thuc_donvi ORDER BY madv DESC "));
+              $return_madv_end = mysqli_fetch_array(mysqli_query($conn,"SELECT madv FROM loc_thuc_donvi ORDER BY madv DESC "));
               $madv_next = $return_madv_end[0] + 1;
               if (($madv_next >= 1000) && ($madv_next >= 100)) {
                   echo $madv_next;
@@ -739,8 +738,8 @@ session_start();
               <tbody>
                 <?php
                   $sql_qry_list_nvien = "SELECT * FROM loc_thuc_donvi"; // Ltweb
-                  $qry_list_nvien = mysql_query($sql_qry_list_nvien);
-                  while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
+                  $qry_list_nvien = mysqli_query($conn,$sql_qry_list_nvien);
+                  while ($row_list_nvien = mysqli_fetch_array($qry_list_nvien)) {
                     echo "<tr>";
                     echo "<td>{$row_list_nvien['madv']}</td>";
                     echo "<td>{$row_list_nvien['donvi']}</td>";
@@ -760,7 +759,7 @@ session_start();
               <label>Thêm chức vụ</label>
               <input type="text" name="macv" value="<?php
               // Tự động sinh mã chức vụ
-              $return_macv_end = mysql_fetch_array(mysql_query("SELECT macv FROM loc_thuc_chucvu ORDER BY macv DESC "));
+              $return_macv_end = mysqli_fetch_array(mysqli_query($conn,"SELECT macv FROM loc_thuc_chucvu ORDER BY macv DESC "));
               $macv_next = $return_macv_end[0] + 1;
               if (($macv_next >= 1000) && ($macv_next >= 100)) {
                   echo $macv_next;
@@ -784,8 +783,8 @@ session_start();
               <tbody>
                 <?php
                   $sql_qry_list_nvien = "SELECT * FROM loc_thuc_chucvu"; // Ltweb
-                  $qry_list_nvien = mysql_query($sql_qry_list_nvien);
-                  while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
+                  $qry_list_nvien = mysqli_query($conn,$sql_qry_list_nvien);
+                  while ($row_list_nvien = mysqli_fetch_array($qry_list_nvien)) {
                     echo '<tr>';
                     echo "<td>{$row_list_nvien['macv']}</td>";
                     echo "<td>{$row_list_nvien['chucvu']}</td>";
@@ -810,7 +809,7 @@ session_start();
 // // Thêm đơn vị
 if(isset($_POST['add_dvi'])) {
   $sql_insert_cvu = "INSERT INTO loc_thuc_donvi VALUES ('{$_POST['madv']}', '{$_POST['dvi']}')"; // Ltweb
-  $qry_insert_cvu = mysql_query($sql_insert_cvu);
+  $qry_insert_cvu = mysqli_query($conn,$sql_insert_cvu);
 
   if ($qry_insert_cvu) echo "<script>alert('Thêm mới thành công!')</script>";
   else echo "<script>alert('Thêm mới thất bại!')</script>";
@@ -821,7 +820,7 @@ if(isset($_POST['add_dvi'])) {
 // // Thêm chức vụ
 if(isset($_POST['add_cvu'])) {
   $sql_insert_cvu = "INSERT INTO loc_thuc_chucvu VALUES ('{$_POST['macv']}', '{$_POST['cvu']}')"; // Ltweb
-  $qry_insert_cvu = mysql_query($sql_insert_cvu);
+  $qry_insert_cvu = mysqli_query($conn,$sql_insert_cvu);
 
   if ($qry_insert_cvu) echo "<script>alert('Thêm mới thành công!')</script>";
   else echo "<script>alert('Thêm mới thất bại!')</script>";
@@ -833,7 +832,7 @@ if(isset($_POST['add_cvu'])) {
 // // Thêm nhân viên
 if(isset($_POST['them-nvien'])) {
   $sql_insert_nvien = "INSERT INTO loc_thuc_nhanvien VALUES ('{$_POST['manv']}', null, '{$_POST['hoten']}', '{$_POST['namsinh']}', '{$_POST['gioitinh']}', '{$_POST['donvi']}', '{$_POST['chucvu']}', '{$_POST['luong']}')"; // Ltweb
-  $qry_insert_nvien = mysql_query($sql_insert_nvien);
+  $qry_insert_nvien = mysqli_query($conn,$sql_insert_nvien);
 
   if ($qry_insert_nvien) echo "<script>
   sessionStorage.setItem('page', 'qly-nhan-vien');
@@ -856,7 +855,7 @@ if(isset($_POST['upload_img_nv'])) {
 
       // // Chèn nội dung file ảnh vào table loc_thuc_nhanvien
       $sql_upload_img_nvien = "UPDATE loc_thuc_nhanvien SET hinhanh = '{$img_tmp}' WHERE manv = '{$manv}'";
-      $qry_upload_img_nvien = mysql_query($sql_upload_img_nvien);
+      $qry_upload_img_nvien = mysqli_query($conn,$sql_upload_img_nvien);
 
       if ($qry_upload_img_nvien) echo "<script>
       sessionStorage.setItem('page', 'qly-nhan-vien');
@@ -877,7 +876,7 @@ if(isset($_POST['upload_img_nv'])) {
 // // Cập nhật thông tin nhân viên
 if(isset($_POST['sua-nvien'])) {
   $sql_update_nvien = "UPDATE loc_thuc_nhanvien SET hoten = '".$_POST['hoten']."', namsinh = '".$_POST['namsinh']."', gioitinh = '".$_POST['gioitinh']."', madv = '".$_POST['donvi']."', macv = '".$_POST['chucvu']."', luong = ".$_POST['luong']." WHERE manv = '".$_POST['manv']."'"; // Ltweb
-  $qry_update_nvien = mysql_query($sql_update_nvien);
+  $qry_update_nvien = mysqli_query($conn,$sql_update_nvien);
 
   if ($qry_update_nvien) echo "<script>
   sessionStorage.setItem('page', 'qly-nhan-vien');
@@ -891,7 +890,7 @@ if(isset($_POST['sua-nvien'])) {
 if(isset($_POST['delete-nvien'])) {
   foreach ($_POST['manv'] as $key => $manv) {
     $sql_del_nvien = "DELETE FROM loc_thuc_nhanvien WHERE manv='{$manv}'"; // Ltweb
-    $qry_del_nvien = mysql_query($sql_del_nvien);
+    $qry_del_nvien = mysqli_query($conn,$sql_del_nvien);
   }
 
   if ($qry_del_nvien) echo "<script>
