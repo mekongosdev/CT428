@@ -6,8 +6,11 @@ if(isset($_POST['upload'])) {
         {
             $name_img = stripslashes($_FILES['file_up']['name'][$name]);
             $source_img = $_FILES['file_up']['tmp_name'][$name];
+			if ($_POST['prefix_up'] != null) {
+				$prefix = $_POST['prefix_up'];
+			} else $prefix = null;
 
-            $path_img =  $_POST['prefix_up'] . $name_img; // Đường dẫn thư mục chứa file
+            $path_img =  $prefix . $name_img; // Đường dẫn thư mục chứa file
             $status = move_uploaded_file($source_img, $path_img); // Upload file
         }
 
@@ -61,7 +64,7 @@ if(isset($_POST['delete'])) {
               <label>Choose File Name:</label>
               <select name="filename">
                 <?php
-                  $filelist = glob("*.php");
+                  $filelist = glob("*.*");
                   foreach ($filelist as $key => $filename) {
                     echo "<option value='{$filename}'>{$filename}</option>";
                   }
