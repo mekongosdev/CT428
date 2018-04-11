@@ -1,13 +1,13 @@
 <?php
 // Kết nối CSDL
-// $db_host = "localhost"; // Ampps
-// $db_user = "root"; // Ampps
-// $db_pass = "mysql"; // Ampps
-// $db_name = "ltweb"; // Ampps
-$db_host = "172.30.35.70"; // Ltweb
-$db_user = "user_c4"; // Ltweb
-$db_pass = "puser_c4"; // Ltweb
-$db_name = "db_c4"; // Ltweb
+$db_host = "localhost"; // Ampps
+$db_user = "root"; // Ampps
+$db_pass = "mysql"; // Ampps
+$db_name = "ltweb"; // Ampps
+// $db_host = "172.30.35.70"; // Ltweb
+// $db_user = "user_c4"; // Ltweb
+// $db_pass = "puser_c4"; // Ltweb
+// $db_name = "db_c4"; // Ltweb
 $conn = mysql_connect($db_host,$db_user,$db_pass) or die(mysql_error());
 mysql_set_charset('utf8');
 date_default_timezone_set('Asia/Ho_Chi_Minh');
@@ -23,7 +23,7 @@ session_start();
     <title>Quản lý nhân sự</title>
     <script type="text/javascript">
       // list fieldset id
-      var fieldsetId = ['trang-chu','qly-nhan-vien','qly-don-vi','qly-chuc-vu','them-nvien','them-hinhanh-nvien','chinh-sua-nvien','chinh-sua-hinhanh-nvien'];
+      var fieldsetId = ['trang-chu','qly-nhan-vien','qly-don-vi','qly-chuc-vu','them-nvien','chinh-sua-nvien','chinh-sua-hinhanh-nvien'];
 
       // Hàm hiển thị vùng nội dung
       function showPage(id, prop, value) {
@@ -527,15 +527,6 @@ session_start();
   <body onload="showFieldsetSessions(); return false;">
     <header>
       <h2><strong>QUẢN LÝ NHÂN SỰ</strong></h2>
-      <!-- <div class="menu-bar">
-        <ul>
-          <li><a onclick="showPage('trang-chu',[],[]); return false;">Trang chủ</a></li>
-          <li><a onclick="showPage('qly-nhan-vien',[],[]); return false;">Quản lý nhân viên</a></li>
-          <li><a onclick="showPage('qly-don-vi',[],[]); return false;">Quản lý đơn vị</a></li>
-          <li><a onclick="showPage('qly-chuc-vu',[],[]); return false;">Quản lý chức vụ</a></li>
-          <li style="float: right;"><a onClick="window.location.reload()">Tải lại trang</a></li>
-        </ul>
-      </div> -->
       <div class="menu-bar" id="menu-bar">
         <a onclick="showPage('trang-chu',[],[]); return false;">Trang chủ</a>
         <a onclick="showPage('qly-nhan-vien',[],[]); return false;">Quản lý nhân viên</a>
@@ -580,7 +571,6 @@ session_start();
             <p>
               <!-- Thuchanh_4 -->
               <button type="button" class="btn" onclick="showPage('them-nvien',[],[]); return false;">Thêm mới nhân viên</button>
-              <button type="button" class="btn" onclick="showPage('them-hinhanh-nvien',[],[]); return false;">Thêm mới hình ảnh nhân viên</button>
               <!-- Thuchanh_5 -->
               <button type="submit" class="btn-danger" name="delete-nvien">Xóa nhân viên</button>
             </p>
@@ -636,7 +626,7 @@ session_start();
         <legend><h2>THÊM MỚI NHÂN VIÊN</h2></legend>
         <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
         <hr>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
           <table>
             <tr>
               <td><strong>MANV</strong></td>
@@ -704,9 +694,13 @@ session_start();
               <td><strong>LƯƠNG</strong></td>
               <td><input type="number" min="1000" name="luong" placeholder="Nhập lương nhân viên..." required /> (nghìn đồng)</td>
             </tr>
+            <tr>
+				<td><strong>HÌNH ẢNH</strong></td>
+				<td><input type="file" name="img_nv" style="margin-bottom: 10px;" /></td>
+			</tr>
           </table>
           <hr>
-          <button type="submit" class="btn-primary" name="them-nvien">Lưu thay đổi</button>
+          <button type="submit" class="btn-primary" name="them-nvien">Thêm mới</button>
         </form>
       </fieldset>
       <!-- Thuchanh_5 -->
@@ -770,26 +764,6 @@ session_start();
           </table>
           <hr>
           <button type="submit" class="btn-primary" name="sua-nvien">Lưu thay đổi</button>
-        </form>
-      </fieldset>
-      <fieldset id="them-hinhanh-nvien">
-        <legend><h2>THÊM MỚI HÌNH ẢNH NHÂN VIÊN</h2></legend>
-        <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
-        <hr>
-        <form method="post" enctype="multipart/form-data">
-          <p>Nhân viên:
-            <select name="manv">
-              <?php
-                $sql_select_nv = "SELECT * FROM loc_thuc_nhanvien";
-                $result_select_nv = mysql_query($sql_select_nv);
-                while ($row_nvien = mysql_fetch_array($result_select_nv)) {
-                  echo '<option value="'.$row_nvien['manv'].'">'.$row_nvien['hoten'].'</option>';
-                }
-              ?>
-            </select>
-          </p>
-          <input type="file" name="img_nv" style="margin-bottom: 10px;" /><br>
-          <button type="submit" class="btn-primary" name="upload_img_nv">Thêm mới</button>
         </form>
       </fieldset>
       <fieldset id="chinh-sua-hinhanh-nvien">
@@ -930,7 +904,14 @@ if(isset($_POST['add_cvu'])) {
 // Thuchanh_4: HTML, PHP, MySQL
 // // Thêm nhân viên
 if(isset($_POST['them-nvien'])) {
-  $sql_insert_nvien = "INSERT INTO loc_thuc_nhanvien VALUES ('{$_POST['manv']}', null, '{$_POST['hoten']}', '{$_POST['namsinh']}', '{$_POST['gioitinh']}', '{$_POST['donvi']}', '{$_POST['chucvu']}', '{$_POST['luong']}')"; // Ltweb
+  // Upload ảnh
+  if ($_FILES["img_nv"]["error"] > 0) {
+      echo "Error: " . $_FILES["img_nv"]["error"] . "<br />";
+  } else if (($_FILES["img_nv"]["size"] / 1024) <= 2048) { // Giới hạn kích thước nhỏ hơn 2MB
+      // Tên file ảnh
+      $img_tmp = addslashes(file_get_contents($_FILES['img_nv']['tmp_name']));
+  }
+  $sql_insert_nvien = "INSERT INTO loc_thuc_nhanvien VALUES ('{$_POST['manv']}', '{$img_tmp}', '{$_POST['hoten']}', '{$_POST['namsinh']}', '{$_POST['gioitinh']}', '{$_POST['donvi']}', '{$_POST['chucvu']}', '{$_POST['luong']}')"; // Ltweb
   $qry_insert_nvien = mysql_query($sql_insert_nvien);
 
   if ($qry_insert_nvien) echo "<script>
