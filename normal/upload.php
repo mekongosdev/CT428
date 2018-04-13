@@ -42,18 +42,13 @@ if(isset($_POST['upload'])) {
 
 // // Rename file in CT428 Directory
 if(isset($_POST['change-file'])) {
-    foreach ($_POST['oldname'] as $key => $oldname) {
-      foreach ($_POST['newname'] as $key => $newname) {
-        foreach ($_POST['filetype'] as $key => $filetype) {
-          $fileNewName = $newname . '.' . $filetype;
-          $status = rename($oldname,$fileNewName);
-        }
-      }
-    }
-    if ($status) {
-      echo '<script>alert("Success Message");</script>';
-    } else echo '<script>alert("Fail Message");</script>';
-    echo '<meta http-equiv="refresh" content="0">';
+  $fileNewName = $_POST['newname'] . '.' . $_POST['filetype'];
+  $status = rename($_POST['oldname'],$fileNewName);
+
+  if ($status) {
+    echo '<script>alert("Success Message");</script>';
+  } else echo '<script>alert("Fail Message");</script>';
+  echo '<meta http-equiv="refresh" content="0">';
 }
 
 // // Delete file in CT428 Directory
@@ -88,15 +83,20 @@ if(isset($_POST['delete-file'])) {
 
       // Hàm true/false disabled
       function is_Disabled(parent_id, class_name) {
-          var parent = document.getElementById(parent_id);
-          var same_class = parent.getElementsByClassName(class_name);
-          for (i=0; i<= same_class.length; i++) {
-            if (same_class[i].disabled === true) {
-                same_class[i].disabled = false;
-            } else {
-                same_class[i].disabled = true;
-            }
+        var parent = document.getElementById(parent_id);
+        var fields = parent.getElementsByTagName('input');
+        for(var i = 0; i < fields.length; i++)
+        {
+          fields[i].disabled = true;
+        }
+        var same_class = parent.getElementsByClassName(class_name);
+        for (i=0; i<= same_class.length; i++) {
+          if (same_class[i].disabled === true) {
+              same_class[i].disabled = false;
+          } else {
+              same_class[i].disabled = true;
           }
+        }
       }
     </script>
     <style media="screen">
@@ -197,8 +197,8 @@ if(isset($_POST['delete-file'])) {
       }
 
       .btn-success {
-          background-color: green !important;
-          color: white !important;
+          background-color: lime !important;
+          color: black !important;
           border: 1px solid white !important;
       }
 
@@ -227,8 +227,8 @@ if(isset($_POST['delete-file'])) {
 
       .btn-success:hover {
           background-color: white !important;
-          color: green !important;
-          border: 1px solid green !important;
+          color: lime !important;
+          border: 1px solid lime !important;
       }
 
       .btn-danger:hover {
@@ -295,6 +295,7 @@ if(isset($_POST['delete-file'])) {
           <b class="btn btn-success">Còn lại: <?php echo round(diskfreespace('/') / 1048576) . ' MB'; ?></b>
           <b><button class="btn btn-primary" type="submit" name="change-file" value="change-file">Lưu file</button></b>
           <b><button class="btn btn-danger" type="submit" name="delete-file" value="delete-file">Xóa file</button></b>
+          <b><button class="btn" type="button" onclick="location.reload();">Tải lại</button></b>
         </p>
         <table>
           <thead>
