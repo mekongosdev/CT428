@@ -184,7 +184,21 @@ session_start();
             border-radius: 10px;
         }
 
-        /* sự kiện hover cho lớp btn */
+        /* lớp btn-primary cho thẻ button */
+        .btn-primary {
+            background-color: blue !important;
+            color: white !important;
+            border: 1px solid white !important;
+        }
+
+        /* lớp btn-danger cho thẻ button */
+        .btn-danger {
+            background-color: red !important;
+            color: white !important;
+            border: 1px solid white !important;
+        }
+
+        /* sự kiện hover cho các lớp btn */
         .btn:hover {
             background-color: blue;
             color: white;
@@ -194,44 +208,16 @@ session_start();
             border-radius: 10px;
         }
 
-        /* lớp btn-primary cho thẻ button */
-        .btn-primary {
-            background-color: blue;
-            color: white;
-            font-weight: bold;
-            padding: 5px 10px 5px 10px;
-            border: 1px solid white;
-            border-radius: 10px;
-        }
-
-        /* sự kiện hover cho lớp btn-primary */
         .btn-primary:hover {
-            background-color: white;
-            color: blue;
-            font-weight: bold;
-            padding: 5px 10px 5px 10px;
-            border: 1px solid blue;
-            border-radius: 10px;
+            background-color: white !important;
+            color: blue !important;
+            border: 1px solid blue !important;
         }
 
-        /* lớp btn-danger cho thẻ button */
-        .btn-danger {
-            background-color: red;
-            color: white;
-            font-weight: bold;
-            padding: 5px 10px 5px 10px;
-            border: 1px solid white;
-            border-radius: 10px;
-        }
-
-        /* sự kiện hover cho lớp btn-danger */
         .btn-danger:hover {
-            background-color: white;
-            color: red;
-            font-weight: bold;
-            padding: 5px 10px 5px 10px;
-            border: 1px solid red;
-            border-radius: 10px;
+            background-color: white !important;
+            color: red !important;
+            border: 1px solid red !important;
         }
 
         /* lớp menu-bar */
@@ -572,7 +558,7 @@ session_start();
               <!-- Thuchanh_4 -->
               <button type="button" class="btn" onclick="showPage('them-nvien',[],[]); return false;">Thêm mới nhân viên</button>
               <!-- Thuchanh_5 -->
-              <button type="submit" class="btn-danger" name="delete-nvien">Xóa nhân viên</button>
+              <button type="submit" class="btn btn-danger" name="delete-nhieu-nvien">Xóa nhiều nhân viên</button>
             </p>
             <hr>
             <div style="width: 100%">
@@ -588,7 +574,7 @@ session_start();
                     <th>ĐƠN VỊ</th>
                     <th>CHỨC VỤ</th>
                     <th>LƯƠNG<br />(nghìn đồng)</th>
-                    <th>CHỈNH SỬA</th>
+                    <th>THAO TÁC</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -608,9 +594,15 @@ session_start();
                       echo "<td>{$row_list_nvien['luong']}</td>";
                       echo '<td>';
                         // Thuchanh_5
-                        echo '<button type="button" class="btn" onclick="showPage('."'chinh-sua-nvien', ['manv','hoten','namsinh','gioitinh','chucvu','donvi','luong'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['namsinh']."','".$row_list_nvien['gioitinh']."','".$row_list_nvien['macv']."','".$row_list_nvien['madv']."','".$row_list_nvien['luong']."']".'); return false;">Thông tin</button>';
+                        echo '<button type="button" class="btn" onclick="showPage('."'chinh-sua-nvien', ['manv','hoten','namsinh','gioitinh','chucvu','donvi','luong'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['namsinh']."','".$row_list_nvien['gioitinh']."','".$row_list_nvien['macv']."','".$row_list_nvien['madv']."','".$row_list_nvien['luong']."']".'); return false;">
+                            Sửa thông tin
+                          </button>';
                         echo "<br />";
-                        echo '<button type="button" class="btn" onclick="showPage('."'chinh-sua-hinhanh-nvien', ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">Hình ảnh</button>';
+                        echo '<button type="button" class="btn" onclick="showPage('."'chinh-sua-hinhanh-nvien', ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">
+                            Sửa hình ảnh
+                          </button>';
+                        echo "<br />";
+                        echo '<button type="submit" name="delete-nvien" value="'.$row_list_nvien['manv'].'" class="btn btn-danger">Xóa nhân viên</button>';
                       echo '</td>';
                       echo "</tr>";
                     }
@@ -700,7 +692,7 @@ session_start();
 			</tr>
           </table>
           <hr>
-          <button type="submit" class="btn-primary" name="them-nvien">Thêm mới</button>
+          <button type="submit" class="btn btn-primary" name="them-nvien">Thêm mới</button>
         </form>
       </fieldset>
       <!-- Thuchanh_5 -->
@@ -763,7 +755,7 @@ session_start();
             </tr>
           </table>
           <hr>
-          <button type="submit" class="btn-primary" name="sua-nvien">Lưu thay đổi</button>
+          <button type="submit" class="btn btn-primary" name="sua-nvien">Lưu thay đổi</button>
         </form>
       </fieldset>
       <fieldset id="chinh-sua-hinhanh-nvien">
@@ -776,7 +768,7 @@ session_start();
             <input type="text" id="hoten_ha" value="" disabled />
           </p>
           <input type="file" name="img_nv" style="margin-bottom: 10px;" /><br>
-          <button type="submit" class="btn-primary" name="upload_img_nv">Cập nhật</button>
+          <button type="submit" class="btn btn-primary" name="upload_img_nv">Cập nhật</button>
         </form>
       </fieldset>
       <fieldset id="qly-don-vi" class="qly-don-vi">
@@ -798,7 +790,7 @@ session_start();
               }
               ?>" placeholder="Nhập mã đơn vị" required />
               <input type="text" name="dvi" placeholder="Nhập tên đơn vị" required />
-              <button type="submit" class="btn-primary" name="add_dvi">Thêm</button>
+              <button type="submit" class="btn btn-primary" name="add_dvi">Thêm</button>
             </form>
             <hr>
             <table>
@@ -843,7 +835,7 @@ session_start();
               }
               ?>" placeholder="Nhập mã chức vụ" required />
               <input type="text" name="cvu" placeholder="Nhập tên chức vụ" required />
-              <button type="submit" class="btn-primary" name="add_cvu">Thêm</button>
+              <button type="submit" class="btn btn-primary" name="add_cvu">Thêm</button>
             </form>
             <hr>
             <table>
@@ -884,8 +876,8 @@ if(isset($_POST['add_dvi'])) {
   $sql_insert_cvu = "INSERT INTO loc_thuc_donvi VALUES ('{$_POST['madv']}', '{$_POST['dvi']}')"; // Ltweb
   $qry_insert_cvu = mysql_query($sql_insert_cvu);
 
-  if ($qry_insert_cvu) echo "<script>alert('Thêm mới thành công!')</script>";
-  else echo "<script>alert('Thêm mới thất bại!')</script>";
+  // if ($qry_insert_cvu) echo "<script>alert('Thêm mới thành công!')</script>";
+  // else echo "<script>alert('Thêm mới thất bại!')</script>";
 
   echo '<meta http-equiv="refresh" content="0">';
 }
@@ -895,8 +887,8 @@ if(isset($_POST['add_cvu'])) {
   $sql_insert_cvu = "INSERT INTO loc_thuc_chucvu VALUES ('{$_POST['macv']}', '{$_POST['cvu']}')"; // Ltweb
   $qry_insert_cvu = mysql_query($sql_insert_cvu);
 
-  if ($qry_insert_cvu) echo "<script>alert('Thêm mới thành công!')</script>";
-  else echo "<script>alert('Thêm mới thất bại!')</script>";
+  // if ($qry_insert_cvu) echo "<script>alert('Thêm mới thành công!')</script>";
+  // else echo "<script>alert('Thêm mới thất bại!')</script>";
 
   echo '<meta http-equiv="refresh" content="0">';
 }
@@ -916,8 +908,9 @@ if(isset($_POST['them-nvien'])) {
 
   if ($qry_insert_nvien) echo "<script>
   sessionStorage.setItem('page', 'qly-nhan-vien');
-  alert('Thêm mới thành công!');</script>";
-  else echo "<script>alert('Thêm mới thất bại!')</script>";
+  // alert('Thêm mới thành công!');
+  </script>";
+  // else echo "<script>alert('Thêm mới thất bại!')</script>";
 
   echo '<meta http-equiv="refresh" content="0">';
 }
@@ -939,14 +932,17 @@ if(isset($_POST['upload_img_nv'])) {
 
       if ($qry_upload_img_nvien) echo "<script>
       sessionStorage.setItem('page', 'qly-nhan-vien');
-      alert('Thao tác thành công!');</script>";
+      // alert('Thao tác thành công!');
+      </script>";
       else echo "<script>
       sessionStorage.setItem('page', 'qly-nhan-vien');
-      alert('Thao tác thất bại!')</script>";
+      // alert('Thao tác thất bại!')
+      </script>";
   }
   else {
       echo "<script>sessionStorage.setItem('page', 'qly-nhan-vien');
-      alert('Thao tác thất bại!')</script>";
+      // alert('Thao tác thất bại!')
+      </script>";
   }
 
   echo '<meta http-equiv="refresh" content="0">';
@@ -960,23 +956,38 @@ if(isset($_POST['sua-nvien'])) {
 
   if ($qry_update_nvien) echo "<script>
   sessionStorage.setItem('page', 'qly-nhan-vien');
-  alert('Chỉnh sửa thành công!');</script>";
-  else echo "<script>alert('Chỉnh sửa thất bại!')</script>";
+  // alert('Chỉnh sửa thành công!');
+  </script>";
+  // else echo "<script>alert('Chỉnh sửa thất bại!')</script>";
 
   echo '<meta http-equiv="refresh" content="0">';
 }
 
 // // Xóa nhân viên
 if(isset($_POST['delete-nvien'])) {
+  $sql_del_once_nvien = "DELETE FROM loc_thuc_nhanvien WHERE manv='{$_POST['delete-nvien']}'"; // Ltweb
+  $qry_del_once_nvien = mysql_query($sql_del_once_nvien);
+
+  if ($qry_del_once_nvien) echo "<script>
+  sessionStorage.setItem('page', 'qly-nhan-vien');
+  // alert('Xóa thành công!');
+  </script>";
+  // else echo "<script>alert('Xóa thất bại!')</script>";
+
+  echo '<meta http-equiv="refresh" content="0">';
+}
+
+if(isset($_POST['delete-nhieu-nvien'])) {
   foreach ($_POST['manv'] as $key => $manv) {
-    $sql_del_nvien = "DELETE FROM loc_thuc_nhanvien WHERE manv='{$manv}'"; // Ltweb
-    $qry_del_nvien = mysql_query($sql_del_nvien);
+    $sql_del_many_nvien = "DELETE FROM loc_thuc_nhanvien WHERE manv='{$manv}'"; // Ltweb
+    $qry_del_many_nvien = mysql_query($sql_del_many_nvien);
   }
 
-  if ($qry_del_nvien) echo "<script>
+  if ($qry_del_many_nvien) echo "<script>
   sessionStorage.setItem('page', 'qly-nhan-vien');
-  alert('Xóa thành công!');</script>";
-  else echo "<script>alert('Xóa thất bại!')</script>";
+  // alert('Xóa thành công!');
+  </script>";
+  // else echo "<script>alert('Xóa thất bại!')</script>";
 
   echo '<meta http-equiv="refresh" content="0">';
 }

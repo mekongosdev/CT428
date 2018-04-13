@@ -87,7 +87,21 @@
       border-radius: 10px;
   }
 
-  /* sự kiện hover cho lớp btn */
+  /* lớp btn-primary cho thẻ button */
+  .btn-primary {
+      background-color: blue !important;
+      color: white !important;
+      border: 1px solid white !important;
+  }
+
+  /* lớp btn-danger cho thẻ button */
+  .btn-danger {
+      background-color: red !important;
+      color: white !important;
+      border: 1px solid white !important;
+  }
+
+  /* sự kiện hover cho các lớp btn */
   .btn:hover {
       background-color: blue;
       color: white;
@@ -97,44 +111,16 @@
       border-radius: 10px;
   }
 
-  /* lớp btn-primary cho thẻ button */
-  .btn-primary {
-      background-color: blue;
-      color: white;
-      font-weight: bold;
-      padding: 5px 10px 5px 10px;
-      border: 1px solid white;
-      border-radius: 10px;
-  }
-
-  /* sự kiện hover cho lớp btn-primary */
   .btn-primary:hover {
-      background-color: white;
-      color: blue;
-      font-weight: bold;
-      padding: 5px 10px 5px 10px;
-      border: 1px solid blue;
-      border-radius: 10px;
+      background-color: white !important;
+      color: blue !important;
+      border: 1px solid blue !important;
   }
 
-  /* lớp btn-danger cho thẻ button */
-  .btn-danger {
-      background-color: red;
-      color: white;
-      font-weight: bold;
-      padding: 5px 10px 5px 10px;
-      border: 1px solid white;
-      border-radius: 10px;
-  }
-
-  /* sự kiện hover cho lớp btn-danger */
   .btn-danger:hover {
-      background-color: white;
-      color: red;
-      font-weight: bold;
-      padding: 5px 10px 5px 10px;
-      border: 1px solid red;
-      border-radius: 10px;
+      background-color: white !important;
+      color: red !important;
+      border: 1px solid red !important;
   }
 
   /* lớp menu-bar */
@@ -164,6 +150,44 @@
   .menu-bar .icon {
       display: none;
   }
+
+  /* mẫu giao diện menu-bar kiểu cũ sử dụng thẻ ul-li */
+  /* .menu-bar {
+      width: 100%;
+      height: 32px;
+      float: left;
+      background-color: rgb(29, 223, 72);
+  }
+
+  .menu-bar ul{
+      list-style: none;
+      margin: 0px 0 0 0px;
+      padding: 0px 0 0 0px;
+  }
+
+  .menu-bar ul li {
+      font-weight: bold;
+      float: left;
+      background-color: rgb(29, 223, 72);
+      margin-left: 15px;
+      margin-right: 15px;
+  }
+
+  .menu-bar ul a, ul a:visited {
+      padding: 5px 5px 5px 15px;
+      display: block;
+      text-decoration: none;
+  }
+
+  .menu-bar ul a:hover, ul a:active, ul a:focus {
+      background-color: #4CAF50;
+      color: #FFF;
+  }
+
+  .menu-bar a {
+      text-decoration: none;
+      color: white;
+  } */
 
   /* lớp main-content để hiển thị các nội dung chính của web */
   .main-content {
@@ -219,11 +243,19 @@
       border: 0px;
   }
 
+  /* .qly-nvien-tbl table, th, td {
+      border: 1px solid #ddd;
+  } */
+
   /* định nghĩa màu sắc của dòng tên trường hiển thị th */
   .qly-nvien-tbl th {
       background-color: #4CAF50;
       color: white;
   }
+
+  /* .qly-nvien-tbl tr:nth-child(even) {
+      background-color: #f2f2f2;
+  } */
 
   /* định nghĩa màu nền của mỗi dòng nội dung ở thẻ tr */
   .qly-nvien-tbl tr {
