@@ -583,7 +583,7 @@ session_start();
                     $qry_list_nvien = mysql_query($sql_qry_list_nvien);
                     while ($row_list_nvien = mysql_fetch_array($qry_list_nvien)) {
                       echo "<tr>";
-                      echo '<td><input type="checkbox" name="manv[]" value="'.$row_list_nvien['manv'].'"</td>';
+                      echo '<td><input type="checkbox" name="manv[]" value="'.$row_list_nvien['manv'].'" /></td>';
                       echo "<td>{$row_list_nvien['manv']}</td>";
                       echo '<td><img src="data:image/jpeg;base64,'.base64_encode( $row_list_nvien['hinhanh'] ).'" style="width: 100px; height: 150px" alt="Hình ảnh nhân viên"/></td>';
                       echo "<td>{$row_list_nvien['hoten']}</td>";
