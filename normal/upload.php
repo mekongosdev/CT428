@@ -343,7 +343,7 @@ if(isset($_POST['delete-file'])) {
                   <td class="align-center"><?php echo get_file_size($filename); ?> KB </td>
                   <td class="align-center">
                     <a href="<?php echo $filename; ?>" target="_blank" class="btn btn-success">View</a>
-                    <button class="btn btn-primary" onclick="showField('rename-file',['oldname','newname','filetype'],['<?php echo get_file_name($filename); ?>','<?php echo get_file_name($filename); ?>','<?php echo get_file_name_extension($filename); ?>']); return false;">Rename</button>
+                    <button class="btn btn-primary" onclick="showField('rename-file',['oldname','newname','filetype'],['<?php echo $filename; ?>','<?php echo get_file_name($filename); ?>','<?php echo get_file_name_extension($filename); ?>']); return false;">Rename</button>
                     <button class="btn btn-danger" type="submit" name="delete-file" value="<?php echo $filename; ?>">Delete</button>
                   </td>
                 </tr>
