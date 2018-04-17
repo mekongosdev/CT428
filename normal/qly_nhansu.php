@@ -23,7 +23,8 @@ session_start();
     <title>Quản lý nhân sự</title>
     <script type="text/javascript">
       // list fieldset id
-      var fieldsetId = ['trang-chu','qly-nhan-vien','qly-don-vi','qly-chuc-vu','them-nvien','chinh-sua-nvien','chinh-sua-hinhanh-nvien'];
+      // var fieldsetId = ['trang-chu','qly-nhan-vien','qly-don-vi','qly-chuc-vu','them-nvien','chinh-sua-nvien','chinh-sua-hinhanh-nvien'];
+      var fieldsetId = ['trang-chu','qly-nhan-vien','qly-don-vi','qly-chuc-vu','them-nvien','chinh-sua-nvien'];
 
       // Hàm hiển thị vùng nội dung
       function showPage(id, prop, value) {
@@ -597,10 +598,10 @@ session_start();
                         echo '<button type="button" class="btn" onclick="showPage('."'chinh-sua-nvien', ['manv','hoten','namsinh','gioitinh','chucvu','donvi','luong'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."','".$row_list_nvien['namsinh']."','".$row_list_nvien['gioitinh']."','".$row_list_nvien['macv']."','".$row_list_nvien['madv']."','".$row_list_nvien['luong']."']".'); return false;">
                             Sửa thông tin
                           </button>';
-                        echo "<br />";
-                        echo '<button type="button" class="btn" onclick="showPage('."'chinh-sua-hinhanh-nvien', ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">
-                            Sửa hình ảnh
-                          </button>';
+                        // echo "<br />";
+                        // echo '<button type="button" class="btn" onclick="showPage('."'chinh-sua-hinhanh-nvien', ['manv_ha','hoten_ha'], ['".$row_list_nvien['manv']."','".$row_list_nvien['hoten']."']".'); return false;">
+                        //     Sửa hình ảnh
+                        //   </button>';
                         echo "<br />";
                         echo '<button type="submit" name="delete-nvien" value="'.$row_list_nvien['manv'].'" class="btn btn-danger">Xóa nhân viên</button>';
                       echo '</td>';
@@ -700,7 +701,7 @@ session_start();
         <legend><h2>CHỈNH SỬA NHÂN VIÊN</h2></legend>
         <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
         <hr>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
           <table>
             <tr>
               <td><strong>MANV</strong></td>
@@ -753,12 +754,16 @@ session_start();
               <td><strong>LƯƠNG</strong></td>
               <td><input type="number" min="1000" name="luong" id="luong" placeholder="Nhập lương nhân viên..." required /> (nghìn đồng)</td>
             </tr>
+            <tr>
+              <td><strong>HÌNH ẢNH</strong></td>
+      				<td><input type="file" name="sua_img_nv" style="margin-bottom: 10px;" /></td>
+            </tr>
           </table>
           <hr>
           <button type="submit" class="btn btn-primary" name="sua-nvien">Lưu thay đổi</button>
         </form>
       </fieldset>
-      <fieldset id="chinh-sua-hinhanh-nvien">
+      <!-- <fieldset id="chinh-sua-hinhanh-nvien">
         <legend><h2>CHỈNH SỬA HÌNH ẢNH NHÂN VIÊN</h2></legend>
         <button class="btn" onclick="showPage('qly-nhan-vien',[],[]); return false;">Quay lại</button>
         <hr>
@@ -770,7 +775,7 @@ session_start();
           <input type="file" name="img_nv" style="margin-bottom: 10px;" /><br>
           <button type="submit" class="btn btn-primary" name="upload_img_nv">Cập nhật</button>
         </form>
-      </fieldset>
+      </fieldset> -->
       <fieldset id="qly-don-vi" class="qly-don-vi">
         <legend><h2>PHÒNG BAN/ĐƠN VỊ</h2></legend>
         <center>
@@ -916,42 +921,53 @@ if(isset($_POST['them-nvien'])) {
 }
 
 // // Thêm ảnh nhân viên
-if(isset($_POST['upload_img_nv'])) {
-  $manv = $_POST['manv'];
-
-  // Upload ảnh
-  if ($_FILES["img_nv"]["error"] > 0) {
-      echo "Error: " . $_FILES["img_nv"]["error"] . "<br />";
-  } else if (($_FILES["img_nv"]["size"] / 1024) <= 2048) { // Giới hạn kích thước nhỏ hơn 2MB
-      // Tên file ảnh
-      $img_tmp = addslashes(file_get_contents($_FILES['img_nv']['tmp_name']));
-
-      // // Chèn nội dung file ảnh vào table loc_thuc_nhanvien
-      $sql_upload_img_nvien = "UPDATE loc_thuc_nhanvien SET hinhanh = '{$img_tmp}' WHERE manv = '{$manv}'";
-      $qry_upload_img_nvien = mysql_query($sql_upload_img_nvien);
-
-      if ($qry_upload_img_nvien) echo "<script>
-      sessionStorage.setItem('page', 'qly-nhan-vien');
-      // alert('Thao tác thành công!');
-      </script>";
-      else echo "<script>
-      sessionStorage.setItem('page', 'qly-nhan-vien');
-      // alert('Thao tác thất bại!')
-      </script>";
-  }
-  else {
-      echo "<script>sessionStorage.setItem('page', 'qly-nhan-vien');
-      // alert('Thao tác thất bại!')
-      </script>";
-  }
-
-  echo '<meta http-equiv="refresh" content="0">';
-}
+// if(isset($_POST['upload_img_nv'])) {
+//   $manv = $_POST['manv'];
+//
+//   // Upload ảnh
+//   if ($_FILES["img_nv"]["error"] > 0) {
+//       echo "Error: " . $_FILES["img_nv"]["error"] . "<br />";
+//   } else if (($_FILES["img_nv"]["size"] / 1024) <= 2048) { // Giới hạn kích thước nhỏ hơn 2MB
+//       // Tên file ảnh
+//       $img_tmp = addslashes(file_get_contents($_FILES['img_nv']['tmp_name']));
+//
+//       // // Chèn nội dung file ảnh vào table loc_thuc_nhanvien
+//       $sql_upload_img_nvien = "UPDATE loc_thuc_nhanvien SET hinhanh = '{$img_tmp}' WHERE manv = '{$manv}'";
+//       $qry_upload_img_nvien = mysql_query($sql_upload_img_nvien);
+//
+//       if ($qry_upload_img_nvien) echo "<script>
+//       sessionStorage.setItem('page', 'qly-nhan-vien');
+//       // alert('Thao tác thành công!');
+//       </script>";
+//       else echo "<script>
+//       sessionStorage.setItem('page', 'qly-nhan-vien');
+//       // alert('Thao tác thất bại!')
+//       </script>";
+//   }
+//   else {
+//       echo "<script>sessionStorage.setItem('page', 'qly-nhan-vien');
+//       // alert('Thao tác thất bại!')
+//       </script>";
+//   }
+//
+//   echo '<meta http-equiv="refresh" content="0">';
+// }
 
 // Thuchanh_5: HTML, PHP, MySQL
 // // Cập nhật thông tin nhân viên
 if(isset($_POST['sua-nvien'])) {
-  $sql_update_nvien = "UPDATE loc_thuc_nhanvien SET hoten = '".$_POST['hoten']."', namsinh = '".$_POST['namsinh']."', gioitinh = '".$_POST['gioitinh']."', madv = '".$_POST['donvi']."', macv = '".$_POST['chucvu']."', luong = ".$_POST['luong']." WHERE manv = '".$_POST['manv']."'"; // Ltweb
+  if($_FILES["sua_img_nv"]['tmp_name']) {
+    // Upload ảnh
+    if ($_FILES["sua_img_nv"]["error"] > 0) {
+        echo "Error: " . $_FILES["sua_img_nv"]["error"] . "<br />";
+    } else if (($_FILES["sua_img_nv"]["size"] / 1024) <= 2048) { // Giới hạn kích thước nhỏ hơn 2MB
+        // Tên file ảnh
+        $img_tmp = addslashes(file_get_contents($_FILES['sua_img_nv']['tmp_name']));
+    }
+    $sql_update_nvien = "UPDATE loc_thuc_nhanvien SET hinhanh = '".$img_tmp."', hoten = '".$_POST['hoten']."', namsinh = '".$_POST['namsinh']."', gioitinh = '".$_POST['gioitinh']."', madv = '".$_POST['donvi']."', macv = '".$_POST['chucvu']."', luong = ".$_POST['luong']." WHERE manv = '".$_POST['manv']."'"; // Ltweb
+  } else {
+    $sql_update_nvien = "UPDATE loc_thuc_nhanvien SET hoten = '".$_POST['hoten']."', namsinh = '".$_POST['namsinh']."', gioitinh = '".$_POST['gioitinh']."', madv = '".$_POST['donvi']."', macv = '".$_POST['chucvu']."', luong = ".$_POST['luong']." WHERE manv = '".$_POST['manv']."'"; // Ltweb
+  }
   $qry_update_nvien = mysql_query($sql_update_nvien);
 
   if ($qry_update_nvien) echo "<script>

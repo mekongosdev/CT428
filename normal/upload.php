@@ -6,7 +6,7 @@ function get_file_size($filename) {
   return $fileSize;
 }
 
-// // Lấy phần mở rộng tên file
+// // Lấy phần tên file
 function get_file_name($filename) {
   $splitFileName = array_reverse(explode(".", $filename));
   return end($splitFileName);
@@ -82,20 +82,36 @@ if(isset($_POST['delete-file'])) {
       }
 
       // Hàm true/false disabled
-      function is_Disabled(parent_id, class_name) {
-        var parent = document.getElementById(parent_id);
-        var fields = parent.getElementsByTagName('input');
-        for(var i = 0; i < fields.length; i++)
-        {
-          fields[i].disabled = true;
-        }
-        var same_class = parent.getElementsByClassName(class_name);
-        for (i=0; i<= same_class.length; i++) {
-          if (same_class[i].disabled === true) {
-              same_class[i].disabled = false;
+      function is_Disabled(id){
+        var inputId = document.getElementById(id);
+        if(inputId.disabled === true) {
+          inputId.disabled = false;
+        } else inputId.disabled = true;
+			}
+
+      // Hàm truyền giá trị vào các text field
+      function showHideElement(primary, second, value) {
+          var x = document.getElementById(primary);
+          if (x.style.display === "none") {
+              x.style.display = "block";
+              for (i=0; i<second.length; i++) {
+                document.getElementById(second[i]).value = value[i];
+              }
           } else {
-              same_class[i].disabled = true;
+              x.style.display = "none";
           }
+      }
+
+      function showField(id, prop, value) {
+        var fieldsetId = ['rename-file'];
+        for (i=0; i<fieldsetId.length; i++) {
+          document.getElementById(fieldsetId[i]).style.display = 'none';
+        }
+        // show the table by id
+        document.getElementById(id).style.display = 'block';
+        // parameter transmission for property
+        for (i=0; i<prop.length; i++) {
+          document.getElementById(prop[i]).value = value[i];
         }
       }
     </script>
@@ -275,16 +291,26 @@ if(isset($_POST['delete-file'])) {
   </head>
   <body>
     <div class="action-left">
-      <fieldset id="upload-file">
+      <fieldset>
         <legend><h2>Upload file</h2></legend>
         <form method="post" enctype="multipart/form-data" >
           <p><input type="file" name="file_up[]" multiple="true" /></p>
           <p>
             <label>Prefix</label>
-            <input type="text" name="prefix_up" class="prefix-input" placeholder="Example prefix: loc_thuc_..." disabled />
-            <button type="button" name="button" onclick="is_Disabled('upload-file','prefix-input'); return false;">...</button>
+            <input type="text" name="prefix_up" id="prefix-input" placeholder="Example prefix: loc_thuc_..." disabled />
+            <button type="button" name="button" onclick="is_Disabled('prefix-input'); return false;">...</button>
           </p>
-          <p><input type="submit" name="upload" value="Upload" /></p>
+          <p><input class="btn btn-primary" type="submit" name="upload" value="Upload" /></p>
+        </form>
+      </fieldset>
+      <fieldset id="rename-file" style="display: none;">
+        <legend><h2>Rename file</h2></legend>
+        <form method="post">
+          <label>Tên mới</label>
+          <input type="hidden" name="oldname" id="oldname" value="" />
+          <input type="text" name="newname" id="newname" placeholder="Nhập tên file..." />
+          <input type="hidden" name="filetype" id="filetype" value="" />
+          <p><input class="btn btn-primary" type="submit" name="change-file" value="Lưu file" /></p>
         </form>
       </fieldset>
     </div>
@@ -293,7 +319,6 @@ if(isset($_POST['delete-file'])) {
         <legend><h2>List file</h2></legend>
         <p>
           <b class="btn btn-success">Còn lại: <?php echo round(diskfreespace('/') / 1048576) . ' MB'; ?></b>
-          <b><button class="btn btn-primary" type="submit" name="change-file" value="change-file">Lưu file</button></b>
           <b><button class="btn btn-danger" type="submit" name="delete-file" value="delete-file">Xóa file</button></b>
           <b><button class="btn" type="button" onclick="location.reload();">Tải lại</button></b>
         </p>
@@ -310,24 +335,19 @@ if(isset($_POST['delete-file'])) {
           <tbody>
             <?php
               $filelist = glob("*.*");
-              foreach ($filelist as $key => $filename) {
-                echo "<tr>
-                  <td class='align-center'><input type='checkbox' name='file[]' value='{$filename}' /></td>
-                  <td ondblclick='".'is_Disabled("list-file","' . strtolower(get_file_name($filename)) . '")'."; return false;'>
-                    <input class='" . strtolower(get_file_name($filename)) . "' type='hidden' name='oldname[]' value='{$filename}' disabled/>
-                    <input class='" . strtolower(get_file_name($filename)) . "' type='text' name='newname[]' value='" . get_file_name($filename) . "' placeholder='Nhập tên file...' disabled/>
-                    <input class='" . strtolower(get_file_name($filename)) . "' type='hidden' name='filetype[]' value='" . get_file_name_extension($filename) . "' disabled/>
+              foreach ($filelist as $key => $filename) { ?>
+                <tr>
+                  <td class="align-center"><input type="checkbox" name="file[]" value="<?php echo $filename; ?>" /></td>
+                  <td><?php echo $filename; ?></td>
+                  <td class="align-center"><?php echo strtoupper(get_file_name_extension($filename)); ?> File </td>
+                  <td class="align-center"><?php echo get_file_size($filename); ?> KB </td>
+                  <td class="align-center">
+                    <a href="<?php echo $filename; ?>" target="_blank" class="btn btn-success">View</a>
+                    <button class="btn btn-primary" onclick="showField('rename-file',['oldname','newname','filetype'],['<?php echo get_file_name($filename); ?>','<?php echo get_file_name($filename); ?>','<?php echo get_file_name_extension($filename); ?>']); return false;">Rename</button>
+                    <button class="btn btn-danger" type="submit" name="delete-file" value="<?php echo $filename; ?>">Delete</button>
                   </td>
-                  <td class='align-center'>" . strtoupper(get_file_name_extension($filename)) . " File </td>
-                  <td class='align-center'>" . get_file_size($filename) . " KB </td>
-                  <td class='align-center'>
-                    <a href='{$filename}' target='_blank' class='btn btn-success'>View</a>
-                    <!--button class='btn btn-success'>Rename</button-->
-                    <button class='btn btn-danger' type='submit' name='delete-file' value='{$filename}'>Delete</button>
-                  </td>
-                </tr>";
-              }
-            ?>
+                </tr>
+            <?php } ?>
           </tbody>
         </table>
       </form>
